@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 # The Movie Review Webapp
 
@@ -188,3 +189,7 @@ template language is used.
 Write [nice php code](http://www.phptherightway.com/).
 
 [PHP is much better than you think](http://fabien.potencier.org/article/64/php-is-much-better-than-you-think).
+=======
+# tdt4237
+Software Security 
+>>>>>>> 3a47d2363eebdf793b8688ab1c1c77b08d5b3b96
