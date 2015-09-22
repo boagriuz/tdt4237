@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 
 # The Movie Review Webapp
 
@@ -192,4 +192,4 @@ Write [nice php code](http://www.phptherightway.com/).
 =======
 # tdt4237
 Software Security 
->>>>>>> 3a47d2363eebdf793b8688ab1c1c77b08d5b3b96
+
