@@ -3,6 +3,7 @@
 namespace tdt4237\webapp\validation;
 
 use tdt4237\webapp\models\User;
+use tdt4237\webapp\models\Email;
 
 class RegistrationFormValidation
 {
@@ -10,9 +11,9 @@ class RegistrationFormValidation
     
     private $validationErrors = [];
     
-    public function __construct($username, $password, $fullname, $address, $postcode)
+    public function __construct($username, $password, $fullname, $address, $postcode, $email)
     {
-        return $this->validate($username, $password, $fullname, $address, $postcode);
+        return $this->validate($username, $password, $fullname, $address, $postcode, $email);
     }
     
     public function isGoodToGo()
@@ -25,11 +26,9 @@ class RegistrationFormValidation
         return $this->validationErrors;
     }
 
-    private function validate($username, $password, $fullname, $address, $postcode)
+    private function validate($username, $password, $fullname, $address, $postcode, $email)
     {
-        if (empty($password)) {
-            $this->validationErrors[] = 'Password cannot be empty';
-        }
+        
 
         if(empty($fullname)) {
             $this->validationErrors[] = "Please write in your full name";
@@ -47,8 +46,20 @@ class RegistrationFormValidation
             $this->validationErrors[] = "Post code must be exactly four digits";
         }
 
-        if (preg_match('/^[A-Za-z0-9_]+$/', $username) === 0) {
+        //set email, validation is done in Email.php
+        
+        if(empty($email)){
+            $this->validationErrors[] = "Please fill in your email";
+
+        }
+
+        if (preg_match('/^[A-Za-z0-9_]+$/', $username) === 0) 
+        {
             $this->validationErrors[] = 'Username can only contain letters and numbers';
+        }
+
+        if (empty($password)) {
+            $this->validationErrors[] = 'Password cannot be empty';
         }
     }
 }

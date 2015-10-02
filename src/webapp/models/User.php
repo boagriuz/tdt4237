@@ -17,13 +17,14 @@ class User
     protected $bankcard;
     protected $isAdmin = 0;
 
-    function __construct($username, $hash, $fullname, $address, $postcode)
+    function __construct($username, $hash, $fullname, $address, $postcode, $email)
     {
         $this->username = $username;
         $this->hash = $hash;
         $this->fullname = $fullname;
         $this->address = $address;
         $this->postcode = $postcode;
+        $this->email = $email;
     }
 
     public function getUserId()

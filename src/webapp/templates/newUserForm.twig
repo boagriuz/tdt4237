@@ -9,16 +9,27 @@
 
 <form action="" method="POST">
 
-    <label>Username: </label>
-    <input type="text" name="user" value="{{ username }}"> <br />
-    <label>Password: </label>
-    <input type="text" name="pass"> <br />
-    <label>Full Name (Will not be visible for other users)</label>
-    <input type="text" name = "fullname"><br/>
-    <label>Address (Will not be visible for other users)</label>
-    <input type ="text" name = "address"><br/>
-    <label> Postcode (Only four digits please)</label>
-    <input type = "text" name = "postcode"><br/>
+    
+    <input type="text" name = "fullname" placeholder="Fullname" /><br/>
+    <!--(Will not be visible for other users)-->
+
+    <input type ="text" name = "address" placeholder="Address" /><br/>
+    <!--(Will not be visible for other users)-->
+
+    <input type = "text" name = "postcode" placeholder="Postcode" /><br/>
+    <!--(Will not be visible for other users)-->
+
+    <input type = "text" name = "email" placeholder="Email" /><br/>
+    <!--(Will not be visible for other users)-->
+
+    <br />
+
+    <input type="text" name="user" value="{{ username }}" placeholder="Username" /> <br />
+  
+    <input type="text" name="pass" placeholder="Password" /> <br />
+    <!--(Will not be visible for other users)-->
+
+    <br />
     <input type="submit" name="submit" value="Create new user"> <br/>
 
 </form>

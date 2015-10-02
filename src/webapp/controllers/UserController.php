@@ -30,26 +30,28 @@ class UserController extends Controller
     public function create()
     {
         $request  = $this->app->request;
-        $username = $request->post('user');
-        $password = $request->post('pass');
+        
         $fullname = $request->post('fullname');
         $address = $request->post('address');
         $postcode = $request->post('postcode');
+        $email = $request->post('email');
+        $username = $request->post('user');
+        $password = $request->post('pass');
 
 
-        $validation = new RegistrationFormValidation($username, $password, $fullname, $address, $postcode);
+        $validation = new RegistrationFormValidation($username, $password, $fullname, $address, $postcode, $email);
 
         if ($validation->isGoodToGo()) {
             $password = $password;
             $password = $this->hash->make($password);
-            $user = new User($username, $password, $fullname, $address, $postcode);
+            $user = new User($username, $password, $fullname, $address, $postcode, $email);
             $this->userRepository->save($user);
 
             $this->app->flash('info', 'Thanks for creating a user. Now log in.');
             return $this->app->redirect('/login');
         }
 
-        $errors = join("<br>\n", $validation->getValidationErrors());
+        $errors = join("<br />", $validation->getValidationErrors());
         $this->app->flashNow('error', $errors);
         $this->render('newUserForm.twig', ['username' => $username]);
     }
@@ -129,7 +131,7 @@ class UserController extends Controller
             return $this->render('edituser.twig', ['user' => $user]);
         }
 
-        $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
+        $this->app->flashNow('error', join("<br/>", $validation->getValidationErrors()));
         $this->render('edituser.twig', ['user' => $user]);
     }
 

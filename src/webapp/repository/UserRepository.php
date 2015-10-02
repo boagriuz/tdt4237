@@ -29,12 +29,13 @@ class UserRepository
 
     public function makeUserFromRow(array $row)
     {
-        $user = new User($row['user'], $row['pass'], $row['fullname'], $row['address'], $row['postcode']);
+        $user = new User($row['user'], $row['pass'], $row['fullname'], $row['address'], $row['postcode'], $row['email']);
         $user->setUserId($row['id']);
         $user->setFullname($row['fullname']);
         $user->setAddress(($row['address']));
         $user->setPostcode((($row['postcode'])));
         $user->setBio($row['bio']);
+        $user->setEmail($row['email']);
         $user->setIsAdmin($row['isadmin']);
 
         if (!empty($row['email'])) {
