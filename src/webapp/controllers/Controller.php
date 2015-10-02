@@ -8,14 +8,15 @@ class Controller
     
     protected $userRepository;
     protected $auth;
-    protected $movieRepository;
+    protected $postRepository;
 
     public function __construct()
     {
         $this->app = \Slim\Slim::getInstance();
         $this->userRepository = $this->app->userRepository;
-        $this->movieRepository = $this->app->movieRepository;
-        $this->movieReviewRepository = $this->app->movieReviewRepository;
+        $this->postRepository = $this->app->postRepository;
+        $this->postRepository = $this->app->postRepository;
+        $this->commentRepository = $this->app->commentRepository;
         $this->auth = $this->app->auth;
         $this->hash = $this->app->hash;
     }

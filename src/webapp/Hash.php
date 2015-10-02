@@ -2,19 +2,27 @@
 
 namespace tdt4237\webapp;
 
+use Symfony\Component\Config\Definition\Exception\Exception;
+
 class Hash
 {
+
+    static $salt = "1234";
+
+
     public function __construct()
     {
     }
 
-    public function make($plaintext)
+    public static function make($plaintext)
     {
-        return hash('sha512', $plaintext);
+        return hash('sha1', $plaintext . Hash::$salt);
+
     }
 
     public function check($plaintext, $hash)
     {
         return $this->make($plaintext) === $hash;
     }
+
 }

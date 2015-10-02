@@ -7,16 +7,23 @@ class User
 
     protected $userId  = null;
     protected $username;
+    protected $fullname;
+    protected $address;
+    protected $postcode;
     protected $hash;
     protected $email   = null;
     protected $bio     = 'Bio is empty.';
     protected $age;
+    protected $bankcard;
     protected $isAdmin = 0;
 
-    function __construct($username, $hash)
+    function __construct($username, $hash, $fullname, $address, $postcode)
     {
         $this->username = $username;
         $this->hash = $hash;
+        $this->fullname = $fullname;
+        $this->address = $address;
+        $this->postcode = $postcode;
     }
 
     public function getUserId()
@@ -47,6 +54,32 @@ class User
     public function getAge()
     {
         return $this->age;
+    }
+
+    public function getFullname() {
+        return $this->fullname;
+    }
+
+    public function setFullname($fullname) {
+        $this->fullname = $fullname;
+    }
+
+    public function getAddress() {
+        return $this->address;
+    }
+
+    public function setAddress($address) {
+        $this->address = $address;
+    }
+
+    public function getPostcode() {
+        return $this->postcode;
+
+    }
+
+    public function setPostcode($postcode) {
+        $this->postcode = $postcode;
+
     }
 
     public function isAdmin()

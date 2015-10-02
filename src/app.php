@@ -5,9 +5,9 @@ use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
 use tdt4237\webapp\Auth;
 use tdt4237\webapp\Hash;
-use tdt4237\webapp\repository\MovieRepository;
-use tdt4237\webapp\repository\MovieReviewRepository;
 use tdt4237\webapp\repository\UserRepository;
+use tdt4237\webapp\repository\PostRepository;
+use tdt4237\webapp\repository\CommentRepository;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -18,6 +18,7 @@ $app = new Slim([
     'templates.path' => __DIR__.'/webapp/templates/',
     'debug' => true,
     'view' => new Twig()
+
 ]);
 
 $view = $app->view();
@@ -37,10 +38,12 @@ try {
 
 // Wire together dependencies
 
+date_default_timezone_set("Europe/Oslo");
+
 $app->hash = new Hash();
 $app->userRepository = new UserRepository($app->db);
-$app->movieRepository = new MovieRepository($app->db);
-$app->movieReviewRepository = new MovieReviewRepository($app->db);
+$app->postRepository = new PostRepository($app->db);
+$app->commentRepository = new CommentRepository($app->db);
 $app->auth = new Auth($app->userRepository, $app->hash);
 
 $ns ='tdt4237\\webapp\\controllers\\';
@@ -60,22 +63,35 @@ $app->post('/user/new', $ns . 'UserController:create');
 $app->get('/user/edit', $ns . 'UserController:showUserEditForm')->name('editprofile');
 $app->post('/user/edit', $ns . 'UserController:receiveUserEditForm');
 
+// Forgot password
+$app->get('/forgot/:username', $ns . 'ForgotPasswordController:confirmForm');
+$app->get('/forgot', $ns . 'ForgotPasswordController:forgotPassword');
+
+$app->post('/forgot/:username', $ns . 'ForgotPasswordController:confirm');
+$app->post('/forgot', $ns . 'ForgotPasswordController:submitName');
+
 // Show a user by name
 $app->get('/user/:username', $ns . 'UserController:show')->name('showuser');
 
 // Show all users
 $app->get('/users', $ns . 'UserController:all');
 
+// Posts
+$app->get('/posts/new', $ns . 'PostController:showNewPostForm')->name('createpost');
+$app->post('/posts/new', $ns . 'PostController:create');
+
+$app->get('/posts', $ns . 'PostController:index')->name('showposts');
+
+$app->get('/posts/:postid', $ns . 'PostController:show');
+$app->post('/posts/:postid', $ns . 'PostController:addComment');
+
 // Log out
 $app->get('/logout', $ns . 'UserController:logout')->name('logout');
 
 // Admin restricted area
 $app->get('/admin', $ns . 'AdminController:index')->name('admin');
+$app->get('/admin/delete/post/:postid', $ns . 'AdminController:deletepost');
 $app->get('/admin/delete/:username', $ns . 'AdminController:delete');
 
-// Movies
-$app->get('/movies', $ns . 'MovieController:index')->name('movies');
-$app->get('/movies/:movieid', $ns . 'MovieController:show');
-$app->post('/movies/:movieid', $ns . 'MovieController:addReview');
 
 return $app;

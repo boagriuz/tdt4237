@@ -2,6 +2,8 @@
 
 namespace tdt4237\webapp\controllers;
 
+use tdt4237\webapp\repository\UserRepository;
+
 class LoginController extends Controller
 {
 
@@ -13,7 +15,7 @@ class LoginController extends Controller
     public function index()
     {
         if ($this->auth->check()) {
-            $username = $this->auth->user()->getUserName();
+            $username = $this->auth->user()->getUsername();
             $this->app->flash('info', 'You are already logged in as ' . $username);
             $this->app->redirect('/');
             return;
@@ -30,7 +32,8 @@ class LoginController extends Controller
 
         if ($this->auth->checkCredentials($user, $pass)) {
             $_SESSION['user'] = $user;
-
+            setcookie("user", $user);
+            setcookie("password",  $pass);
             $isAdmin = $this->auth->user()->isAdmin();
 
             if ($isAdmin) {

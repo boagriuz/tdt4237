@@ -10,9 +10,9 @@ class RegistrationFormValidation
     
     private $validationErrors = [];
     
-    public function __construct($username, $password)
+    public function __construct($username, $password, $fullname, $address, $postcode)
     {
-        return $this->validate($username, $password);
+        return $this->validate($username, $password, $fullname, $address, $postcode);
     }
     
     public function isGoodToGo()
@@ -25,14 +25,26 @@ class RegistrationFormValidation
         return $this->validationErrors;
     }
 
-    private function validate($username, $password)
+    private function validate($username, $password, $fullname, $address, $postcode)
     {
         if (empty($password)) {
             $this->validationErrors[] = 'Password cannot be empty';
         }
 
-        if (strlen($username) < self::MIN_USER_LENGTH) {
-            $this->validationErrors[] = "Username too short. Min length is " . self::MIN_USER_LENGTH;
+        if(empty($fullname)) {
+            $this->validationErrors[] = "Please write in your full name";
+        }
+
+        if(empty($address)) {
+            $this->validationErrors[] = "Please write in your address";
+        }
+
+        if(empty($postcode)) {
+            $this->validationErrors[] = "Please write in your post code";
+        }
+
+        if (strlen($postcode) != "4") {
+            $this->validationErrors[] = "Post code must be exactly four digits";
         }
 
         if (preg_match('/^[A-Za-z0-9_]+$/', $username) === 0) {

@@ -4,27 +4,39 @@
 
 <h2>User</h2>
 
-{{ flash.info|raw }} <br />
-{{ flash.error|raw }} <br />
+{{ flash.info}} <br />
+{{ flash.error}} <br />
 
 {% if user %}
     <table>
         <tr>
             <th>Id</th>
-            <th>Username</th>
-            <th>Hash</th>
-            <th>Email</th>
-            <th>Bio</th>
-            <th>Age</th>
-        </tr>
-            <tr>
-            <td>{{ user.id|raw }}</td>
-            <td>{{ user.username|raw }}</td>
-            <td><!-- {{ user.passwordhash|raw }} -->********************************(not shown)</td>
-            <td>{{ user.email|raw }}</td>
-            <td>{{ user.bio|raw }}</td>
-            <td>{{ user.age|raw }}</td>
-        </tr>
+            <th>{{ user.userid }}</th>
+            <tr></tr>
+            <th>Username:</th>
+            <td>{{ user.username }}</th>
+            <tr></tr>
+            <th>Full Name:</th>
+            <td>{{ user.fullname }}</th>
+            <tr></tr>
+            <th>Address:</th>
+            <td>{{ user.address }} </td>
+            <tr></tr>
+            <th>Postcode:</th>
+            <td>{{  user.postcode }}</td>
+            <tr></tr>
+            <th>Hash:</th>
+            <td><!-- {{ user.hash|raw }} -->********************************(not shown)</td>
+            <tr></tr>
+            <th>Email:</th>
+            <td>{{ user.email }}</td>
+            <tr></tr>
+            <th>Bio:</th>
+            <td>{{ user.bio}}</td>
+            <tr></tr>
+            <th>Age:</th>
+            <td>{{ user.age }}</td>
+            <tr></tr>
     </table>
 {% else %}
     Could not find a user with username "{{ username|raw }}".

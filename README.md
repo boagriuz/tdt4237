@@ -1,9 +1,8 @@
 
-
-# The Movie Review Webapp
+# Software Security Webapp (Working title)
 
 This is the webapp used for the course Software Security TDT4237
-at NTNU. Used for the first time in September 2014.
+at NTNU. Used for the first time in September 2014 and updated with a new theme in August 2015.
 Below is the guide to fetch code and deploy it so that the app
 can be browsed at [http://localhost:8080/](http://localhost:8080/).
 
@@ -189,7 +188,3 @@ template language is used.
 Write [nice php code](http://www.phptherightway.com/).
 
 [PHP is much better than you think](http://fabien.potencier.org/article/64/php-is-much-better-than-you-think).
-=======
-# tdt4237
-Software Security 
-

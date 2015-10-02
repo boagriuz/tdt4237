@@ -44,6 +44,12 @@ class Auth
         return isset($_SESSION['user']);
     }
 
+    public function getUsername() {
+        if(isset($_SESSION['user'])){
+        return $_SESSION['user'];
+        }
+    }
+
     /**
      * Check if the person is a guest.
      */
@@ -78,7 +84,9 @@ class Auth
 
     public function logout()
     {
-        session_destroy();
+        if($this->guest()) {
+            session_destroy();
+        }
     }
 
 }
