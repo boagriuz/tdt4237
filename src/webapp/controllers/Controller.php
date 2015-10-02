@@ -2,6 +2,8 @@
 
 namespace tdt4237\webapp\controllers;
 
+
+
 class Controller
 {
     protected $app;

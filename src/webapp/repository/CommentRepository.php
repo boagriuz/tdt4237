@@ -31,7 +31,8 @@ class CommentRepository
 
 
 
-        if ($comment->getCommentId() === null) {
+        if ($comment->getCommentId() === null) 
+        {
             $query = "INSERT INTO comments (author, text, date, belongs_to_post) "
                 . "VALUES ('$author', '$text', '$date', '$postid')";
             return $this->db->exec($query);

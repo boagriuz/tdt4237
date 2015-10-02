@@ -9,7 +9,7 @@ class Email
     public function __construct($email)
     {
         if (! $this->isValid($email)) {
-            throw new Exception("Invalid email format on email");
+            throw new \Exception("Invalid email format on email");
         }
         
         $this->email = $email;

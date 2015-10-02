@@ -7,6 +7,7 @@
  */
 
 namespace tdt4237\webapp\controllers;
+use tdt4237\webapp\models\User;
 
 
 class ForgotPasswordController extends Controller {
@@ -42,9 +43,20 @@ class ForgotPasswordController extends Controller {
         }
     }
 
-    function confirm() {
-        $this->app->flash('success', 'Thank you! The password was sent to your email');
+    function confirm($username) {
         // $sendmail
+        
+        $to = "yolo@gmail.com";
+        $subject = "Health Forum: Password reset";
+        $msg = wordwrap("Hi there,\nThis email was sent using PHP's mail function.");
+        $from = "From: noreply@tdt4237.idi.ntnu.no";
+        $mail = mail($to, $subject, $msg, $from);
+
+        if ($mail) {
+            $this->app->flash('success', 'Thank you! The password was sent to your email');
+        } else {
+            $this->app->flash('failed', 'Error: your email was not sent!');
+        }
 
         $this->app->redirect('/login');
     }
