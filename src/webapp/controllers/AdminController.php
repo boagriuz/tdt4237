@@ -33,6 +33,12 @@ class AdminController extends Controller
 
     public function delete($username)
     {
+		if (! $this->isAuthorized())
+		{
+			http_response_code(401);
+			exit;
+		}
+		
         if ($this->userRepository->deleteByUsername($username) === 1) {
             $this->app->flash('info', "Sucessfully deleted '$username'");
             $this->app->redirect('/admin');
@@ -45,6 +51,12 @@ class AdminController extends Controller
 
     public function deletePost($postId)
     {
+		if (! $this->isAuthorized())
+		{
+			http_response_code(401);
+			exit;
+		}
+		
         if ($this->postRepository->deleteByPostid($postId) === 1) {
             $this->app->flash('info', "Sucessfully deleted '$postId'");
             $this->app->redirect('/admin');
@@ -54,4 +66,14 @@ class AdminController extends Controller
         $this->app->flash('info', "An error ocurred. Unable to delete user '$username'.");
         $this->app->redirect('/admin');
     }
+	
+	private function isAuthorized()
+	{
+		if (! $this->auth->check())
+		{
+			return false;
+		}
+		
+		return $this->auth->isAdmin();
+	}
 }
