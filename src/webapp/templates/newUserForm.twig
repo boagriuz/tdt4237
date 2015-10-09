@@ -4,8 +4,8 @@
 
 <h2>New user</h2>
 
-<b>{{ flash.info}}</b> <br />
-<b>{{ flash.error }}</b> <br />
+<b>{{ flash.info|raw}}</b> <br />
+<b>{{ flash.error|raw }}</b> <br />
 
 <form action="" method="POST">
 
@@ -26,7 +26,9 @@
 
     <input type="text" name="user" value="{{ username }}" placeholder="Username" /> <br />
   
-    <input type="text" name="pass" placeholder="Password" /> <br />
+    <input type="password" name="pass_one" placeholder="Password" /> <br />
+    <!--(Will not be visible for other users)-->
+    <input type="password" name="pass_two" placeholder="Retype-password" /> <br />
     <!--(Will not be visible for other users)-->
 
     <br />
