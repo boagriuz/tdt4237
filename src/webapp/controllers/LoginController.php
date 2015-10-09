@@ -14,7 +14,8 @@ class LoginController extends Controller
 
     public function index()
     {
-        if ($this->auth->check()) {
+        if ($this->auth->check()) 
+		{
             $username = $this->auth->user()->getUsername();
             $this->app->flash('info', 'You are already logged in as ' . $username);
             $this->app->redirect('/');
@@ -30,16 +31,20 @@ class LoginController extends Controller
         $user    = $request->post('user');
         $pass    = $request->post('pass');
 
-        if ($this->auth->checkCredentials($user, $pass)) {
+        if ($this->auth->checkCredentials($user, $pass)) 
+		{
             $_SESSION['user'] = $user;
-            setcookie("user", $user);
-            setcookie("password",  $pass);
+           // setcookie("user", $user, 0, "/", "localhost:8080/", FALSE, TRUE);
+           // setcookie("password",  $pass);
             $isAdmin = $this->auth->user()->isAdmin();
 
-            if ($isAdmin) {
-                setcookie("isadmin", "yes");
-            } else {
-                setcookie("isadmin", "no");
+            if ($isAdmin) 
+			{
+                $_SESSION['isadmin'] = "yes";
+            } 
+			else 
+			{
+                $_SESSION['isadmin'] = "no";
             }
 
             $this->app->flash('info', "You are now successfully logged in as $user.");

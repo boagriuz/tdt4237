@@ -26,32 +26,34 @@ class PostController extends Controller
 
     public function show($postId)
     {
-        $post = $this->postRepository->find($postId);
-        $comments = $this->commentRepository->findByPostId($postId);
-        $request = $this->app->request;
-        $message = $request->get('msg');
-        $variables = [];
-
-
-        if($message) {
-            $variables['msg'] = $message;
-
+		if(!$this->auth->guest()) 
+		{
+        	$post = $this->postRepository->find($postId);
+            $comments = $this->commentRepository->findByPostId($postId);
+            $request = $this->app->request;
+            $message = $request->get('msg');
+            $variables = [];
+    
+            if($message) {
+                $variables['msg'] = $message;
+    
+            }
+    
+            $this->render('showpost.twig', [
+                'post' => $post,
+                'comments' => $comments,
+                'flash' => $variables
+            ]);
         }
-
-
-
-
-        $this->render('showpost.twig', [
-            'post' => $post,
-            'comments' => $comments,
-            'flash' => $variables
-        ]);
-
+        else 
+		{
+			$this->app->flash('info', 'You must log in to do that');
+            $this->app->redirect('/login');
+        }
     }
 
     public function addComment($postId)
     {
-
         if(!$this->auth->guest()) {
 
             $comment = new Comment();
@@ -62,33 +64,36 @@ class PostController extends Controller
             $this->commentRepository->save($comment);
             $this->app->redirect('/posts/' . $postId);
         }
-        else {
-            $this->app->redirect('/login');
-            $this->app->flash('info', 'you must log in to do that');
+        else 
+		{
+            $this->app->flash('info', 'You must log in to do that');
+			$this->app->redirect('/login');
         }
-
     }
 
     public function showNewPostForm()
     {
-
-        if ($this->auth->check()) {
+        if ($this->auth->check()) 
+		{
             $username = $_SESSION['user'];
             $this->render('createpost.twig', ['username' => $username]);
-        } else {
-
-            $this->app->flash('error', "You need to be logged in to create a post");
+        } 
+		else 
+		{
             $this->app->redirect("/");
+			$this->app->flash('error', "You need to be logged in to create a post");
         }
-
     }
 
     public function create()
     {
-        if ($this->auth->guest()) {
+        if ($this->auth->guest()) 
+		{
             $this->app->flash("info", "You must be logged on to create a post");
             $this->app->redirect("/login");
-        } else {
+        } 
+		else
+		{
             $request = $this->app->request;
             $title = $request->post('title');
             $content = $request->post('content');
@@ -96,7 +101,8 @@ class PostController extends Controller
             $date = date("dmY");
 
             $validation = new PostValidation($title, $author, $content);
-            if ($validation->isGoodToGo()) {
+            if ($validation->isGoodToGo()) 
+			{
                 $post = new Post();
                 $post->setAuthor($author);
                 $post->setTitle($title);
@@ -110,7 +116,6 @@ class PostController extends Controller
             $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
             $this->app->render('createpost.twig');
             // RENDER HERE
-
     }
 }
 
