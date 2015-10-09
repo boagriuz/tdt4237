@@ -42,7 +42,7 @@ class UserController extends Controller
 
         $validation = new RegistrationFormValidation($username, $password, $retype_pass, $fullname, $address, $postcode, $email);
 
-        if ($validation->isGoodToGo() && validateEmail($email)) {
+        if ($validation->isGoodToGo()) {
             $password = $password;
             $password = $this->hash->make($password);
             $user = new User($username, $password, $fullname, $address, $postcode, $email);
@@ -117,7 +117,7 @@ class UserController extends Controller
         $address = $request->post('address');
         $postcode = $request->post('postcode');
 
-        $validation = new EditUserFormValidation($email, $bio, $age);
+        $validation = new EditUserFormValidation($fullname, $address, $postcode, $email, $bio, $age);
 
         if ($validation->isGoodToGo()) {
             $user->setEmail(new Email($email));

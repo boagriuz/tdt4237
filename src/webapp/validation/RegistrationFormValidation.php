@@ -70,5 +70,14 @@ class RegistrationFormValidation
         if( !($password === $retype_pass)){
             $this->validationErrors[] = 'The two passwords are not equal';
         }
+
+         if($username === $password){
+            $this->validationErrors[] = 'Password cannot be the same as username';
+        }
+
+        if(preg_match('((?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,99})', $password) === 0){
+
+            $this->validationErrors[] = 'Invalid password. Minimum 6 characters, digit, uppercase and lowercase letters required';
+        }
     }
 }

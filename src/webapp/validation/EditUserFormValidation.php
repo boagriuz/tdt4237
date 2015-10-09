@@ -6,14 +6,14 @@ class EditUserFormValidation
 {
     private $validationErrors = [];
     
-    public function __construct($email, $bio, $age)
+    public function __construct($fullname, $address, $postcode, $email, $bio, $age)
     {
-        $this->validate($email, $bio, $age);
+        $this->validate($fullname, $address, $postcode, $email, $bio, $age);
     }
     
     public function isGoodToGo()
     {
-        return \count($this->validationErrors) === 0;
+        return empty($this->validationErrors);
     }
     
     public function getValidationErrors()
@@ -21,34 +21,45 @@ class EditUserFormValidation
         return $this->validationErrors;
     }
 
-    private function validate($email, $bio, $age)
+    private function validate($fullname, $address, $postcode, $email, $bio, $age)
     {
-        $this->validateEmail($email);
-        $this->validateAge($age);
-        $this->validateBio($bio);
-    }
-    
-    private function validateEmail($email)
-    {
-        if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $this->validationErrors[] = "Invalid email format on email";
-            return False;
+        
+
+        if(empty($fullname)) {
+            $this->validationErrors[] = "Please write in your full name";
         }
 
-        return True;
-    }
-    
-    private function validateAge($age)
-    {
+        if(empty($address)) {
+            $this->validationErrors[] = "Please write in your address";
+        }
+
+        if(empty($postcode)) {
+            $this->validationErrors[] = "Please write in your post code";
+        }
+
+        if (strlen($postcode) != "4") {
+            $this->validationErrors[] = "Post code must be exactly four digits";
+        }
+
+        //set email, validation is done in Email.php
+        
+        if(empty($email)){
+            $this->validationErrors[] = "Please fill in your email";
+
+        }
+
+        if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->validationErrors[] = "Invalid email format on email";
+        }
+
         if (! is_numeric($age) or $age < 0 or $age > 130) {
             $this->validationErrors[] = 'Age must be between 0 and 130.';
         }
-    }
 
-    private function validateBio($bio)
-    {
         if (empty($bio)) {
             $this->validationErrors[] = 'Bio cannot be empty';
         }
+
     }
+    
 }
