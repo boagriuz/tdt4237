@@ -5,21 +5,23 @@
 <h2>Admin section</h2>
 
 {% if users %}
-    <table>
+    <table cellpadding = "10px" style="border-style: solid; border-width: 2px; margin: 5px;">
     <tr>
         
         <th>Id</th>
         <th>Doctor</th>
         <th>Username</th>
+        <th></th>
+        
+        
 
     </tr>
     {% for user in users %}
         <tr>
             
             <td>{{ user.userid|raw }}</td>
-            <!--<td><input type="checkbox" name="check_list[]" value="doctor 1"></td>-->
-            <td><a href="/admin/add/doctor/{{ user.username|raw }}">No</a></td>
-            <td><a href="/user/{{ user.username|raw }}">{{ user.username|raw }}</a></td>
+            <td><a href="/admin/add/doctor/{{ user.username|raw }}">add</a>/<a href="/admin/delete/doctor/{{ user.username|raw }}">del</a></td>
+            <td><a href="/user/{{ user.username|raw }}">{{ user.username|raw }} is doctor: {% if user.isDoctor %}True {% else %} False {% endif %}</a></td>
             <td><a href="/admin/delete/{{ user.username|raw }}">Delete this user</a></td>
         </tr>
     {% endfor %}
@@ -29,7 +31,7 @@
 {% endif %}
 
 {% if posts %}
-    <table>
+    <table cellpadding = "10px" style="border-style: solid; border-width: 2px; margin: 5px;">
         <tr>
             <th> Id</th>
             <th> Title</th>
@@ -44,8 +46,7 @@
 
 
     </table>
-    <br />
-    <input type="submit" name="submit" value="Save">
+    
 
 {% else %}
     There are no posts

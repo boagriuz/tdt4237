@@ -116,7 +116,7 @@ class UserRepository
     public function saveExistingUser(User $user)
     {
         $query = sprintf(
-            self::UPDATE_QUERY, $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->getUserId(), $user->isDoctor()
+            self::UPDATE_QUERY, $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->isDoctor(), $user->getUserId()
         );
 
         return $this->pdo->exec($query);
@@ -124,18 +124,14 @@ class UserRepository
 
     public function paidDoctor(User $user)
     {
-
-        if($user->isDoctor() === 0)
-        {
-            $this->setIsDoctor(1);
-            return intval($this->save($user));
-
-        }
-        else
-            return 1; 
-
-       
-
+        $user->setIsDoctor(1);
+        return $this->saveExistingUser($user);
     }
 
+    public function deleteDoctor(User $user){
+
+        $user->setIsDoctor(0);
+        return $this->saveExistingUser($user);
+
+    }
 }

@@ -87,7 +87,7 @@ class AdminController extends Controller
         }
 
         $user = $this->userRepository->findByUser($username);
-
+        
         if($this->userRepository->paidDoctor($user) === 1)
         {
             $this->app->flash('info', "Sucessfully added '$username' as a doctor");
@@ -98,9 +98,29 @@ class AdminController extends Controller
         $this->app->flash('info', "An error ocurred. Unable to add user '$username' as doctor.");
         $this->app->redirect('/admin');
         
-            //echoes the value set in the HTML form for each checked checkbox.
-            //so, if I were to check 1, 3, and 5 it would echo value 1, value 3, value 5.
-            //in your case, it would echo whatever $row['Report ID'] is equivalent to.
+          
+    }
+
+
+    public function deletePaidDoctor($username)
+    {
+        if (! $this->isAuthorized())
+        {
+            http_response_code(401);
+            exit;
+        }
+
+        $user = $this->userRepository->findByUser($username);
+        
+        if($this->userRepository->deleteDoctor($user) === 1)
+        {
+            $this->app->flash('info', "Removed '$username' as a doctor");
+            $this->app->redirect('/admin');
+            return;
+        }
+
+        $this->app->flash('info', "An error ocurred. Unable to remove user '$username' as doctor.");
+        $this->app->redirect('/admin');
     }
 
     
