@@ -36,10 +36,11 @@ class UserController extends Controller
         $postcode = $request->post('postcode');
         $email = $request->post('email');
         $username = $request->post('user');
-        $password = $request->post('pass');
+        $password = $request->post('pass_one');
+        $retype_pass = $request->post('pass_two');
 
 
-        $validation = new RegistrationFormValidation($username, $password, $fullname, $address, $postcode, $email);
+        $validation = new RegistrationFormValidation($username, $password, $retype_pass, $fullname, $address, $postcode, $email);
 
         if ($validation->isGoodToGo()) {
             $password = $password;

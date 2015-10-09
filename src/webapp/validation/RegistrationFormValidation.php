@@ -11,9 +11,9 @@ class RegistrationFormValidation
     
     private $validationErrors = [];
     
-    public function __construct($username, $password, $fullname, $address, $postcode, $email)
+    public function __construct($username, $password, $retype_pass, $fullname, $address, $postcode, $email)
     {
-        return $this->validate($username, $password, $fullname, $address, $postcode, $email);
+        return $this->validate($username, $password, $retype_pass, $fullname, $address, $postcode, $email);
     }
     
     public function isGoodToGo()
@@ -26,7 +26,7 @@ class RegistrationFormValidation
         return $this->validationErrors;
     }
 
-    private function validate($username, $password, $fullname, $address, $postcode, $email)
+    private function validate($username, $password, $retype_pass, $fullname, $address, $postcode, $email)
     {
         
 
@@ -60,6 +60,10 @@ class RegistrationFormValidation
 
         if (empty($password)) {
             $this->validationErrors[] = 'Password cannot be empty';
+        }
+
+        if( !($password === $retype_pass)){
+            $this->validationErrors[] = 'The two passwords are not equal';
         }
     }
 }
