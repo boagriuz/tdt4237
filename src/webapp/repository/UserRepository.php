@@ -10,8 +10,8 @@ use tdt4237\webapp\models\User;
 
 class UserRepository
 {
-    const INSERT_QUERY   = "INSERT INTO users(user, pass, email, age, bio, isadmin, fullname, address, postcode) VALUES('%s', '%s', '%s' , '%s' , '%s', '%s', '%s', '%s', '%s')";
-    const UPDATE_QUERY   = "UPDATE users SET email='%s', age='%s', bio='%s', isadmin='%s', fullname ='%s', address = '%s', postcode = '%s' WHERE id='%s'";
+    const INSERT_QUERY   = "INSERT INTO users(user, pass, email, age, bio, isadmin, fullname, address, postcode, isdoctor) VALUES('%s', '%s', '%s' , '%s' , '%s', '%s', '%s', '%s', '%s', '%s')";
+    const UPDATE_QUERY   = "UPDATE users SET email='%s', age='%s', bio='%s', isadmin='%s', fullname ='%s', address = '%s', postcode = '%s', isdoctor='%s' WHERE id='%s'";
     const FIND_BY_NAME   = "SELECT * FROM users WHERE user='%s'";
     const DELETE_BY_NAME = "DELETE FROM users WHERE user='%s'";
     const SELECT_ALL     = "SELECT * FROM users";
@@ -37,6 +37,7 @@ class UserRepository
         $user->setBio($row['bio']);
         $user->setEmail($row['email']);
         $user->setIsAdmin($row['isadmin']);
+        $user->setIsDoctor($row['isdoctor']);
 
         if (!empty($row['email'])) {
             $user->setEmail(new Email($row['email']));
@@ -106,7 +107,7 @@ class UserRepository
     public function saveNewUser(User $user)
     {
         $query = sprintf(
-            self::INSERT_QUERY, $user->getUsername(), $user->getHash(), $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode()
+            self::INSERT_QUERY, $user->getUsername(), $user->getHash(), $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->isDoctor()
         );
 
         return $this->pdo->exec($query);
@@ -115,10 +116,26 @@ class UserRepository
     public function saveExistingUser(User $user)
     {
         $query = sprintf(
-            self::UPDATE_QUERY, $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->getUserId()
+            self::UPDATE_QUERY, $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->getUserId(), $user->isDoctor()
         );
 
         return $this->pdo->exec($query);
+    }
+
+    public function paidDoctor(User $user)
+    {
+
+        if($user->isDoctor() === 0)
+        {
+            $this->setIsDoctor(1);
+            return intval($this->save($user));
+
+        }
+        else
+            return 1; 
+
+       
+
     }
 
 }

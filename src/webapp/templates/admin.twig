@@ -7,12 +7,18 @@
 {% if users %}
     <table>
     <tr>
+        
         <th>Id</th>
+        <th>Doctor</th>
         <th>Username</th>
+
     </tr>
     {% for user in users %}
         <tr>
+            
             <td>{{ user.userid|raw }}</td>
+            <!--<td><input type="checkbox" name="check_list[]" value="doctor 1"></td>-->
+            <td><a href="/admin/add/doctor/{{ user.username|raw }}">No</a></td>
             <td><a href="/user/{{ user.username|raw }}">{{ user.username|raw }}</a></td>
             <td><a href="/admin/delete/{{ user.username|raw }}">Delete this user</a></td>
         </tr>
@@ -27,6 +33,7 @@
         <tr>
             <th> Id</th>
             <th> Title</th>
+
         </tr>
         {% for post in posts %}
         <tr>
@@ -34,7 +41,12 @@
             <td><a href="/admin/delete/post/{{ post.postid|raw }}">Delete this post</a></td>
         </tr>
         {% endfor %}
+
+
     </table>
+    <br />
+    <input type="submit" name="submit" value="Save">
+
 {% else %}
     There are no posts
 {% endif %}
