@@ -44,11 +44,13 @@ class ForgotPasswordController extends Controller {
     }
 
     function confirm($username) {
-        // $sendmail
-        
-        $to = "yolo@gmail.com";
+        //get user by username
+        $user = $this->userRepository->findByUser($username);
+        //send user reset mail
+        $to = $user->getEmail();
         $subject = "Health Forum: Password reset";
-        $msg = wordwrap("Hi there,\nThis email was sent using PHP's mail function.");
+        $temp_pass = $this->createRandomPass();
+        $msg = wordwrap("Hi there,\nThis email was sent using PHP's mail function.\nYour new password is: ".$temp_pass);
         $from = "From: noreply@tdt4237.idi.ntnu.no";
         $mail = mail($to, $subject, $msg, $from);
 
@@ -66,6 +68,19 @@ class ForgotPasswordController extends Controller {
     }
 
 
+    function createRandomPass()
+    {
+            $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
+            $pass = array(); //remember to declare $pass as an array
+            $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+            for ($i = 0; $i < 8; $i++) 
+            {
+                $n = rand(0, $alphaLength);
+                $pass[] = $alphabet[$n];
+            }
+            return implode($pass); //turn the array into a string
+        
+    }
 
 
 

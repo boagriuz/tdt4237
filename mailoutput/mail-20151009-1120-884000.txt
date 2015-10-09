@@ -1,0 +1,6 @@
+To: alex@gmail.com
+Subject: Health Forum: Password reset
+From: noreply@tdt4237.idi.ntnu.no
+
+Hi there,
+This email was sent using PHP's mail function.
