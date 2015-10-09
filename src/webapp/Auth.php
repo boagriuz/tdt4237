@@ -86,7 +86,6 @@ class Auth
     {
         if(! $this->guest()) {
             session_destroy();
-			setcookie("user", null, -1);
         }
     }
 
