@@ -53,6 +53,11 @@ class RegistrationFormValidation
 
         }
 
+
+        if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->validationErrors[] = "Invalid email format on email";
+        }
+
         if (preg_match('/^[A-Za-z0-9_]+$/', $username) === 0) 
         {
             $this->validationErrors[] = 'Username can only contain letters and numbers';

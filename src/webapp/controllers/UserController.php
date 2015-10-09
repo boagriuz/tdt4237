@@ -42,7 +42,7 @@ class UserController extends Controller
 
         $validation = new RegistrationFormValidation($username, $password, $retype_pass, $fullname, $address, $postcode, $email);
 
-        if ($validation->isGoodToGo()) {
+        if ($validation->isGoodToGo() && validateEmail($email)) {
             $password = $password;
             $password = $this->hash->make($password);
             $user = new User($username, $password, $fullname, $address, $postcode, $email);
@@ -54,7 +54,7 @@ class UserController extends Controller
 
         $errors = join('<br />', $validation->getValidationErrors());
         $this->app->flashNow('error', $errors);
-        $this->render('newUserForm.twig', ['username' => $username]);
+        $this->render('newUserForm.twig', ['fullname' => $fullname, 'address' => $address, 'email' => $email, 'postcode' => $postcode, 'username' => $username]);
     }
 
     public function all()

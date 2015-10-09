@@ -32,7 +32,10 @@ class EditUserFormValidation
     {
         if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->validationErrors[] = "Invalid email format on email";
+            return False;
         }
+
+        return True;
     }
     
     private function validateAge($age)

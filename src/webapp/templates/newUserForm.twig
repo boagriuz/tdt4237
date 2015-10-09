@@ -4,22 +4,22 @@
 
 <h2>New user</h2>
 
-<b>{{ flash.info}}</b> <br />
-<b>{{ flash.error }}</b> <br />
+<b>{{ flash.info|raw}}</b> <br />
+<b>{{ flash.error|raw }}</b> <br />
 
-<form action="" method="POST">
+<form method="POST">
 
     
-    <input type="text" name = "fullname" placeholder="Fullname" /><br/>
+    <input type="text" id = "fullname " name = "fullname" value = "{{ fullname }}" placeholder="Fullname" /><label id = "err_fullname" for="fullname" value="{{ fullname }}"></label><br/>
     <!--(Will not be visible for other users)-->
 
-    <input type ="text" name = "address" placeholder="Address" /><br/>
+    <input type ="text" name = "address" value = "{{ address }}" placeholder="Address" /><br/>
     <!--(Will not be visible for other users)-->
 
-    <input type = "text" name = "postcode" placeholder="Postcode" /><br/>
+    <input type = "text" name = "postcode" value = "{{ postcode }}" placeholder="Postcode" /><br/>
     <!--(Will not be visible for other users)-->
 
-    <input type = "text" name = "email" placeholder="Email" /><br/>
+    <input type = "text" name = "email" value = "{{ email }}" placeholder="Email" /><br/>
     <!--(Will not be visible for other users)-->
 
     <br />
