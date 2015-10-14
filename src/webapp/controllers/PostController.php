@@ -44,6 +44,21 @@ class PostController extends Controller
 		if(!$this->auth->guest()) 
 		{
         	$post = $this->postRepository->find($postId);
+			
+			if ($this->auth->isDoctor() and !empty($post))
+			{
+				$authorsName = $post->getAuthor();
+				$author = $this->userRepository->findByUser($authorsName);
+				if (!empty($author))
+				{
+					if (! $author->hasBankAccount() or ! $author->isSubscribed())
+					{
+						http_response_code(401);
+						exit;
+					}
+				}
+			}
+			
             $comments = $this->commentRepository->findByPostId($postId);
             $request = $this->app->request;
             $message = $request->get('msg');
@@ -70,7 +85,6 @@ class PostController extends Controller
     public function addComment($postId)
     {
         if(!$this->auth->guest()) {
-
             $comment = new Comment();
             $comment->setAuthor($_SESSION['user']);
             $comment->setText($this->app->request->post("text"));

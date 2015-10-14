@@ -165,6 +165,11 @@ class User
 		return $this;
 	}
 	
+	public function hasBankAccount()
+	{
+		return $this->bankaccount !== 0;
+	}
+	
 	public function isSubscribed()
 	{
 		return $this->isSubscribed == '1';
