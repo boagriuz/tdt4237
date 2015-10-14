@@ -8,26 +8,22 @@ class PostValidation {
 
     private $validationErrors = [];
 
-    public function __construct($author, $title, $content) {
-        return $this->validate($author, $title, $content);
+    public function __construct($title, $content) {
+        return $this->validate($title, $content);
     }
 
     public function isGoodToGo()
     {
-        return \count($this->validationErrors) ===0;
+        return \count($this->validationErrors) === 0;
     }
 
     public function getValidationErrors()
     {
-    return $this->validationErrors;
+    	return $this->validationErrors;
     }
 
-    public function validate($author, $title, $content)
+    public function validate($title, $content)
     {
-        if ($author == null) {
-            $this->validationErrors[] = "Author needed";
-
-        }
         if ($title == null) {
             $this->validationErrors[] = "Title needed";
         }

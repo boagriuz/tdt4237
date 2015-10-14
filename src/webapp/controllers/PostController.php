@@ -18,6 +18,12 @@ class PostController extends Controller
 
     public function index()
     {
+        if ($this->auth->guest()) 
+		{
+            $this->app->flash("info", "You must be logged in to view posts");
+            $this->app->redirect("/login");
+        }
+		
         $posts = $this->postRepository->all();
 
         $posts->sortByDate();
@@ -34,9 +40,9 @@ class PostController extends Controller
             $message = $request->get('msg');
             $variables = [];
     
-            if($message) {
-                $variables['msg'] = $message;
-    
+            if($message) 
+			{
+                $variables['msg'] = $message; // TODO: GET msg-request is dangerous.
             }
     
             $this->render('showpost.twig', [
@@ -80,8 +86,8 @@ class PostController extends Controller
         } 
 		else 
 		{
-            $this->app->redirect("/");
 			$this->app->flash('error', "You need to be logged in to create a post");
+            $this->app->redirect("/");
         }
     }
 
@@ -97,7 +103,7 @@ class PostController extends Controller
             $request = $this->app->request;
             $title = $request->post('title');
             $content = $request->post('content');
-            $author = $request->post('author');
+            $author = $_SESSION['user'];
             $date = date("dmY");
 
             $validation = new PostValidation($title, $author, $content);
@@ -109,7 +115,7 @@ class PostController extends Controller
                 $post->setContent($content);
                 $post->setDate($date);
                 $savedPost = $this->postRepository->save($post);
-                $this->app->redirect('/posts/' . $savedPost . '?msg="Post succesfully posted');
+                $this->app->redirect('/posts/' . $savedPost . '?msg="Post succesfully posted'); // TODO: GET msg-request is dangerous.
             }
         }
 
