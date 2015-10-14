@@ -25,9 +25,18 @@ class PostController extends Controller
         }
 		
         $posts = $this->postRepository->all();
+		$doctorVisiblePosts = $this->postRepository->doctorVisiblePosts();
 
         $posts->sortByDate();
-        $this->render('posts.twig', ['posts' => $posts]);
+		if (!empty($doctorVisiblePosts))
+		{
+			$doctorVisiblePosts->sortByDate();
+	        $this->render('posts.twig', ['user' => $this->auth->user(), 'posts' => $posts, 'doctorVisiblePosts' => $doctorVisiblePosts]);
+		}
+		else
+		{
+        	$this->render('posts.twig', ['user' => $this->auth->user(), 'posts' => $posts]);
+		}
     }
 
     public function show($postId)

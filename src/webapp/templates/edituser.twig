@@ -5,7 +5,7 @@
     <h2>Edit profile</h2>
 
     <form action="" method="POST">
-        <div id="flasherror">{{ flash.error }}</div>
+        <div id="flasherror">{{ flash.error|raw }}</div>
 
         <label>Full name:</label>
         <input type = "text" name="fullname" value= "{{ user.fullname }}"> <br />
@@ -24,7 +24,14 @@
 
         <label>Age:</label>
         <input type="text" name="age" value="{{ user.age }}"> <br />
-
+		
+        <label>Bankaccount:</label>
+        <input type="text" name="bankaccount" value="{{ user.bankaccount }}"> <br />
+		
+        <label>Subscribed to doctor-review:</label>
+		
+        <input type="checkbox" name="isSubscribed" {% if user.isSubscribed %}checked{% endif %} value="1"> <br />
+	
         <input type="submit" name="submit" value="Save profile">
     </form>
 {% endblock %}

@@ -6,9 +6,9 @@ class EditUserFormValidation
 {
     private $validationErrors = [];
     
-    public function __construct($fullname, $address, $postcode, $email, $bio, $age)
+    public function __construct($fullname, $address, $postcode, $email, $bio, $age, $bankaccount)
     {
-        $this->validate($fullname, $address, $postcode, $email, $bio, $age);
+        $this->validate($fullname, $address, $postcode, $email, $bio, $age, $bankaccount);
     }
     
     public function isGoodToGo()
@@ -21,10 +21,8 @@ class EditUserFormValidation
         return $this->validationErrors;
     }
 
-    private function validate($fullname, $address, $postcode, $email, $bio, $age)
+    private function validate($fullname, $address, $postcode, $email, $bio, $age, $bankaccount)
     {
-        
-
         if(empty($fullname)) {
             $this->validationErrors[] = "Please write in your full name";
         }
@@ -45,7 +43,6 @@ class EditUserFormValidation
         
         if(empty($email)){
             $this->validationErrors[] = "Please fill in your email";
-
         }
 
         if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -55,11 +52,15 @@ class EditUserFormValidation
         if (! is_numeric($age) or $age < 0 or $age > 130) {
             $this->validationErrors[] = 'Age must be between 0 and 130.';
         }
+		
+		if (! is_numeric($bankaccount) or strlen($bankaccount) != "11" and !empty($bankaccount))
+		{
+			$this->validationErrors[] = 'Bank account must be 11 digits.';
+		}
 
         if (empty($bio)) {
             $this->validationErrors[] = 'Bio cannot be empty';
         }
-
     }
     
 }

@@ -116,8 +116,10 @@ class UserController extends Controller
         $fullname = $request->post('fullname');
         $address = $request->post('address');
         $postcode = $request->post('postcode');
+		$bankaccount = $request->post('bankaccount');
+		$isSubscribed = ($request->post('isSubscribed')) === "1" ? 1 : 0;
 
-        $validation = new EditUserFormValidation($fullname, $address, $postcode, $email, $bio, $age);
+        $validation = new EditUserFormValidation($fullname, $address, $postcode, $email, $bio, $age, $bankaccount);
 
         if ($validation->isGoodToGo()) {
             $user->setEmail(new Email($email));
@@ -126,6 +128,8 @@ class UserController extends Controller
             $user->setFullname($fullname);
             $user->setAddress($address);
             $user->setPostcode($postcode);
+			$user->setBankAccount($bankaccount);
+			$user->setIsSubscribed($isSubscribed);
             $this->userRepository->save($user);
 
             $this->app->flashNow('info', 'Your profile was successfully saved.');

@@ -50,7 +50,6 @@ class RegistrationFormValidation
         
         if(empty($email)){
             $this->validationErrors[] = "Please fill in your email";
-
         }
 
 

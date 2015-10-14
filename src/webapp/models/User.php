@@ -4,7 +4,6 @@ namespace tdt4237\webapp\models;
 
 class User
 {
-
     protected $userId  = null;
     protected $username;
     protected $fullname;
@@ -14,9 +13,10 @@ class User
     protected $email   = null;
     protected $bio     = 'Bio is empty.';
     protected $age;
-    protected $bankcard;
     protected $isAdmin = 0;
     protected $isDoctor = 0;
+	protected $bankaccount = '0';
+	protected $isSubscribed = 0;
 
     function __construct($username, $hash, $fullname, $address, $postcode, $email)
     {
@@ -26,6 +26,10 @@ class User
         $this->address = $address;
         $this->postcode = $postcode;
         $this->email = $email;
+		$this->isAdmin = 0;
+		$this->isDoctor = 0;
+		$this->bankaccount = 0;
+		$this->isSubscribed = 0;
     }
 
     public function getUserId()
@@ -76,23 +80,20 @@ class User
 
     public function getPostcode() {
         return $this->postcode;
-
     }
 
     public function setPostcode($postcode) {
         $this->postcode = $postcode;
-
     }
 
     public function isAdmin()
     {
-        return $this->isAdmin === '1';
+        return $this->isAdmin == '1';
     }
 
     public function isDoctor()
     {
-
-        return $this->isDoctor;
+        return $this->isDoctor == '1';
     }
 
     public function setUserId($userId)
@@ -130,17 +131,53 @@ class User
         $this->age = $age;
         return $this;
     }
+	
+	public function getIsAdmin()
+	{
+		return $this->isAdmin;
+	}
 
     public function setIsAdmin($isAdmin)
     {
         $this->isAdmin = $isAdmin;
         return $this;
     }
+	
+	public function getIsDoctor()
+	{
+		return $this->isDoctor;
+	}
 
-    public function setIsDoctor($isDoctor){
-
+    public function setIsDoctor($isDoctor)
+	{
         $this->isDoctor = $isDoctor;
         return $this;
     }
-
+	
+	public function getBankAccount()
+	{
+		return $this->bankaccount;
+	}
+	
+	public function setBankAccount($bankaccount)
+	{
+		$this->bankaccount = $bankaccount;
+		return $this;
+	}
+	
+	public function isSubscribed()
+	{
+		return $this->isSubscribed == '1';
+	}
+	
+	public function getIsSubscribed()
+	{
+		return $this->isSubscribed;
+	}
+	
+	public function setIsSubscribed($isSubscribed)
+	{
+		$this->isSubscribed = $isSubscribed;
+		return $this;
+	}
 }

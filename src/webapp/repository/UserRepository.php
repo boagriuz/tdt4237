@@ -10,8 +10,8 @@ use tdt4237\webapp\models\User;
 
 class UserRepository
 {
-    const INSERT_QUERY   = "INSERT INTO users(user, pass, email, age, bio, isadmin, fullname, address, postcode, isdoctor) VALUES('%s', '%s', '%s' , '%s' , '%s', '%s', '%s', '%s', '%s', '%s')";
-    const UPDATE_QUERY   = "UPDATE users SET email='%s', age='%s', bio='%s', isadmin='%s', fullname ='%s', address = '%s', postcode = '%s', isdoctor='%s' WHERE id='%s'";
+    const INSERT_QUERY   = "INSERT INTO users(user, pass, email, age, bio, isadmin, fullname, address, postcode, isdoctor, bankaccount, issubscribed) VALUES('%s', '%s', '%s' , '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')";
+    const UPDATE_QUERY   = "UPDATE users SET email='%s', age='%s', bio='%s', isadmin='%s', fullname ='%s', address = '%s', postcode = '%s', isdoctor='%s', bankaccount='%s', issubscribed='%s' WHERE id='%s'";
     const FIND_BY_NAME   = "SELECT * FROM users WHERE user='%s'";
     const DELETE_BY_NAME = "DELETE FROM users WHERE user='%s'";
     const SELECT_ALL     = "SELECT * FROM users";
@@ -38,6 +38,12 @@ class UserRepository
         $user->setEmail($row['email']);
         $user->setIsAdmin($row['isadmin']);
         $user->setIsDoctor($row['isdoctor']);
+		$user->setIsSubscribed($row['issubscribed']);
+		
+		if (!empty($row['bankaccount']))
+		{
+			$user->setBankAccount($row['bankaccount']);
+		}
 
         if (!empty($row['email'])) {
             $user->setEmail(new Email($row['email']));
@@ -57,7 +63,6 @@ class UserRepository
         $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
         $row = $result->fetch();
         return $row['fullname'];
-
     }
 
     public function findByUser($username)
@@ -70,7 +75,6 @@ class UserRepository
             return false;
         }
 
-
         return $this->makeUserFromRow($row);
     }
 
@@ -80,8 +84,6 @@ class UserRepository
             sprintf(self::DELETE_BY_NAME, $username)
         );
     }
-
-
 
     public function all()
     {
@@ -107,7 +109,7 @@ class UserRepository
     public function saveNewUser(User $user)
     {
         $query = sprintf(
-            self::INSERT_QUERY, $user->getUsername(), $user->getHash(), $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->isDoctor()
+            self::INSERT_QUERY, $user->getUsername(), $user->getHash(), $user->getEmail(), $user->getAge(), $user->getBio(), $user->getIsAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->getIsDoctor(), $user->getBankAccount(), $user->getIsSubscribed()
         );
 
         return $this->pdo->exec($query);
@@ -116,7 +118,7 @@ class UserRepository
     public function saveExistingUser(User $user)
     {
         $query = sprintf(
-            self::UPDATE_QUERY, $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->isDoctor(), $user->getUserId()
+            self::UPDATE_QUERY, $user->getEmail(), $user->getAge(), $user->getBio(), $user->getIsAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->getIsDoctor(), $user->getBankAccount(), $user->getIsSubscribed(), $user->getUserId()
         );
 
         return $this->pdo->exec($query);
@@ -128,10 +130,9 @@ class UserRepository
         return $this->saveExistingUser($user);
     }
 
-    public function deleteDoctor(User $user){
-
+    public function deleteDoctor(User $user)
+	{
         $user->setIsDoctor(0);
         return $this->saveExistingUser($user);
-
     }
 }

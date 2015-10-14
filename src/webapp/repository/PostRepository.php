@@ -44,6 +44,26 @@ class PostRepository
 
         return $this->makeFromRow($row);
     }
+	
+	public function doctorVisiblePosts()
+	{
+		$sql = "SELECT * FROM posts JOIN users ON posts.author == users.user WHERE (NOT users.bankaccount == 0) AND users.issubscribed == 1";
+        $results = $this->db->query($sql);
+
+        if($results === false) {
+            return [];
+            throw new \Exception('PDO error in posts all()');
+        }
+
+        $fetch = $results->fetchAll();
+        if(count($fetch) == 0) {
+            return false;
+        }
+
+        return new PostCollection(
+            array_map([$this, 'makeFromRow'], $fetch)
+        );
+	}
 
     public function all()
     {
