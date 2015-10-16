@@ -13,11 +13,8 @@ class CommentRepository
      */
     private $db;
 
-    const SELECT_BY_ID = "SELECT * FROM moviereviews WHERE id = %s";
-
     public function __construct(PDO $db)
     {
-
         $this->db = $db;
     }
 
@@ -29,21 +26,27 @@ class CommentRepository
         $date = (string) $comment->getDate();
         $postid = $comment->getPost();
 
-
-
         if ($comment->getCommentId() === null) 
         {
-            $query = "INSERT INTO comments (author, text, date, belongs_to_post) "
-                . "VALUES ('$author', '$text', '$date', '$postid')";
-            return $this->db->exec($query);
+			$statement = $this->db->prepare("INSERT INTO comments (author, text, date, belongs_to_post) VALUES (?, ?, ?, ?)");
+            
+			$statement->bindValue(1, $author, PDO::PARAM_STR);
+			$statement->bindValue(2, $text, PDO::PARAM_STR);
+			$statement->bindValue(3, $date, PDO::PARAM_STR);
+			$statement->bindValue(4, $postid, PDO::PARAM_STR);
+			
+            return $statement->execute();
         }
     }
 
     public function findByPostId($postId)
     {
-        $query   = "SELECT * FROM comments WHERE belongs_to_post = $postId";
-        $rows = $this->db->query($query)->fetchAll();
-
+		$statement = $this->db->prepare("SELECT * FROM comments WHERE belongs_to_post = ?");
+		$statement->bindValue(1, $postId, PDO::PARAM_INT);
+		$statement->execute();
+		
+		$rows = $statement->fetchAll();
+		
         return array_map([$this, 'makeFromRow'], $rows);
     }
 

@@ -44,9 +44,11 @@ class AdminController extends Controller
             $this->app->redirect('/admin');
             return;
         }
-        
-        $this->app->flash('info', "An error ocurred. Unable to delete user '$username'.");
-        $this->app->redirect('/admin');
+		else
+		{
+	        $this->app->flash('info', "An error ocurred. Unable to delete user '$username'.");
+	        $this->app->redirect('/admin');
+		}
     }
 
     public function deletePost($postId)
@@ -57,14 +59,16 @@ class AdminController extends Controller
 			exit;
 		}
 		
-        if ($this->postRepository->deleteByPostid($postId) === 1) {
+        if ($this->postRepository->deleteByPostid($postId) !== false) {
             $this->app->flash('info', "Sucessfully deleted '$postId'");
             $this->app->redirect('/admin');
             return;
         }
-
-        $this->app->flash('info', "An error ocurred. Unable to delete user '$username'.");
-        $this->app->redirect('/admin');
+		else
+		{
+	        $this->app->flash('info', "An error ocurred. Unable to delete post '$postId'.");
+	        $this->app->redirect('/admin');
+		}
     }
 	
 	private function isAuthorized()
@@ -88,17 +92,17 @@ class AdminController extends Controller
 
         $user = $this->userRepository->findByUser($username);
         
-        if($this->userRepository->paidDoctor($user) === 1)
+        if($this->userRepository->paidDoctor($user) !== false)
         {
             $this->app->flash('info', "Sucessfully added '$username' as a doctor");
             $this->app->redirect('/admin');
             return;
         }
-
-        $this->app->flash('info', "An error ocurred. Unable to add user '$username' as doctor.");
-        $this->app->redirect('/admin');
-        
-          
+		else
+		{
+	        $this->app->flash('info', "An error ocurred. Unable to add user '$username' as doctor.");
+	        $this->app->redirect('/admin');
+		}
     }
 
 
@@ -112,7 +116,7 @@ class AdminController extends Controller
 
         $user = $this->userRepository->findByUser($username);
         
-        if($this->userRepository->deleteDoctor($user) === 1)
+        if($this->userRepository->deleteDoctor($user) !== false)
         {
             $this->app->flash('info', "Removed '$username' as a doctor");
             $this->app->redirect('/admin');

@@ -10,12 +10,12 @@ use tdt4237\webapp\models\User;
 
 class UserRepository
 {
-    const INSERT_QUERY   = "INSERT INTO users(user, pass, email, age, bio, isadmin, fullname, address, postcode, isdoctor, bankaccount, issubscribed) VALUES('%s', '%s', '%s' , '%s' , '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')";
-    const UPDATE_QUERY   = "UPDATE users SET email='%s', age='%s', bio='%s', isadmin='%s', fullname ='%s', address = '%s', postcode = '%s', isdoctor='%s', bankaccount='%s', issubscribed='%s' WHERE id='%s'";
-    const FIND_BY_NAME   = "SELECT * FROM users WHERE user='%s'";
-    const DELETE_BY_NAME = "DELETE FROM users WHERE user='%s'";
-    const SELECT_ALL     = "SELECT * FROM users";
-    const FIND_FULL_NAME   = "SELECT * FROM users WHERE user='%s'";
+    const SELECT_ALL = "SELECT * FROM users";
+    protected $INSERT_QUERY;
+    protected $UPDATE_QUERY;
+    protected $FIND_BY_NAME;
+    protected $DELETE_BY_NAME;
+    protected $FIND_FULL_NAME;
 
     /**
      * @var PDO
@@ -25,6 +25,11 @@ class UserRepository
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
+		$this->UPDATE_QUERY = $this->pdo->prepare("UPDATE users SET email=?, age=?, bio=?, isadmin=?, fullname =?, address=?, postcode=?, isdoctor=?, bankaccount=?, issubscribed=? WHERE id=?");
+		$this->INSERT_QUERY = $this->pdo->prepare("INSERT INTO users(user, pass, email, age, bio, isadmin, fullname, address, postcode, isdoctor, bankaccount, issubscribed) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		$this->FIND_BY_NAME = $this->pdo->prepare("SELECT * FROM users WHERE user=?");
+		$this->DELETE_BY_NAME = $this->pdo->prepare("DELETE FROM users WHERE user=?");
+		$this->FIND_FULL_NAME = $this->pdo->prepare("SELECT * FROM users WHERE user=?");
     }
 
     public function makeUserFromRow(array $row)
@@ -58,18 +63,23 @@ class UserRepository
 
     public function getNameByUsername($username)
     {
-        $query = sprintf(self::FIND_FULL_NAME, $username);
+        #$query = sprintf(self::FIND_FULL_NAME, $username);
 
-        $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
-        $row = $result->fetch();
+        #$result = $this->pdo->query($query, PDO::FETCH_ASSOC);
+        #$row = $result->fetch();
+		
+		$this->FIND_FULL_NAME->bindValue(1, $username, PDO::PARAM_STR);
+		$this->FIND_FULL_NAME->execute();
+		$row = $this->FIND_FULL_NAME->fetch(PDO::FETCH_ASSOC);
+		
         return $row['fullname'];
     }
 
     public function findByUser($username)
     {
-        $query  = sprintf(self::FIND_BY_NAME, $username);
-        $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
-        $row = $result->fetch();
+		$this->FIND_BY_NAME->bindValue(1, $username, PDO::PARAM_STR);
+        $this->FIND_BY_NAME->execute();
+		$row = $this->FIND_BY_NAME->fetch(PDO::FETCH_ASSOC);
         
         if ($row === false) {
             return false;
@@ -80,9 +90,11 @@ class UserRepository
 
     public function deleteByUsername($username)
     {
-        return $this->pdo->exec(
-            sprintf(self::DELETE_BY_NAME, $username)
-        );
+		$this->DELETE_BY_NAME->bindValue(1, $username, PDO::PARAM_STR);
+		return $this->DELETE_BY_NAME->execute();
+#        return $this->pdo->exec(
+#            sprintf(self::DELETE_BY_NAME, $username)
+#        );
     }
 
     public function all()
@@ -107,21 +119,38 @@ class UserRepository
     }
 
     public function saveNewUser(User $user)
-    {
-        $query = sprintf(
-            self::INSERT_QUERY, $user->getUsername(), $user->getHash(), $user->getEmail(), $user->getAge(), $user->getBio(), $user->getIsAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->getIsDoctor(), $user->getBankAccount(), $user->getIsSubscribed()
-        );
+    {	
+		$this->INSERT_QUERY->BindValue(1, $user->getUsername(), PDO::PARAM_STR);
+		$this->INSERT_QUERY->BindValue(2, $user->getHash(), PDO::PARAM_STR);
+		$this->INSERT_QUERY->BindValue(3, $user->getEmail(), PDO::PARAM_STR);
+		$this->INSERT_QUERY->BindValue(4, $user->getAge(), PDO::PARAM_STR);
+		$this->INSERT_QUERY->BindValue(5, $user->getBio(), PDO::PARAM_STR);
+		$this->INSERT_QUERY->BindValue(6, $user->getIsAdmin(), PDO::PARAM_INT);
+		$this->INSERT_QUERY->BindValue(7, $user->getFullname(), PDO::PARAM_STR);
+		$this->INSERT_QUERY->BindValue(8, $user->getAddress(), PDO::PARAM_STR);
+		$this->INSERT_QUERY->BindValue(9, $user->getPostcode(), PDO::PARAM_STR);
+		$this->INSERT_QUERY->BindValue(10, $user->getIsDoctor(), PDO::PARAM_INT);
+		$this->INSERT_QUERY->BindValue(11, $user->getBankAccount(), PDO::PARAM_STR);
+		$this->INSERT_QUERY->BindValue(12, $user->getIsSubscribed(), PDO::PARAM_INT);
 
-        return $this->pdo->exec($query);
+        return $this->INSERT_QUERY->execute();
     }
 
     public function saveExistingUser(User $user)
     {
-        $query = sprintf(
-            self::UPDATE_QUERY, $user->getEmail(), $user->getAge(), $user->getBio(), $user->getIsAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->getIsDoctor(), $user->getBankAccount(), $user->getIsSubscribed(), $user->getUserId()
-        );
-
-        return $this->pdo->exec($query);
+		$this->UPDATE_QUERY->bindValue(1, $user->getEmail(), PDO::PARAM_STR);
+		$this->UPDATE_QUERY->bindValue(2, $user->getAge(), PDO::PARAM_STR);
+		$this->UPDATE_QUERY->bindValue(3, $user->getBio(), PDO::PARAM_STR);
+		$this->UPDATE_QUERY->bindValue(4, $user->getIsAdmin(), PDO::PARAM_INT);
+		$this->UPDATE_QUERY->bindValue(5, $user->getFullname(), PDO::PARAM_STR);
+		$this->UPDATE_QUERY->bindValue(6, $user->getAddress(), PDO::PARAM_STR);
+		$this->UPDATE_QUERY->bindValue(7, $user->getPostcode(), PDO::PARAM_STR);
+		$this->UPDATE_QUERY->bindValue(8, $user->getIsDoctor(), PDO::PARAM_INT);
+		$this->UPDATE_QUERY->bindValue(9, $user->getBankAccount(), PDO::PARAM_STR);
+		$this->UPDATE_QUERY->bindValue(10, $user->getIsSubscribed(), PDO::PARAM_INT);
+		$this->UPDATE_QUERY->bindValue(11, $user->getUserId(), PDO::PARAM_INT);
+		
+		return $this->UPDATE_QUERY->execute();
     }
 
     public function paidDoctor(User $user)

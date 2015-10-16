@@ -33,14 +33,14 @@ class PostRepository
 
     public function find($postId)
     {
-        $sql  = "SELECT * FROM posts WHERE postId = $postId";
-        $result = $this->db->query($sql);
-        $row = $result->fetch();
+		$statement = $this->db->prepare("SELECT * FROM posts WHERE postId = ?");
+        $statement->bindValue(1, $postId, PDO::PARAM_INT);
+		$statement->execute();
+		$row = $statement->fetch();
 
         if($row === false) {
             return false;
         }
-
 
         return $this->makeFromRow($row);
     }
@@ -100,24 +100,27 @@ class PostRepository
 
     public function deleteByPostid($postId)
     {
-        return $this->db->exec(
-            sprintf("DELETE FROM posts WHERE postid='%s';", $postId));
+		$statement = $this->db->prepare("DELETE FROM posts WHERE postid=?");
+		$statement->bindValue(1, $postId, PDO::PARAM_INT);
+        return $statement->execute();
     }
 
 
     public function save(Post $post)
     {
         $title   = $post->getTitle();
-        $author = $post->getAuthor();
+        $author  = $post->getAuthor();
         $content = $post->getContent();
         $date    = $post->getDate();
+		
+		$statement = $this->db->prepare("INSERT INTO posts (title, author, content, date) VALUES (?, ?, ?, ?)");
+		
+		$statement->bindValue(1, $title, PDO::PARAM_STR);
+		$statement->bindValue(2, $author, PDO::PARAM_STR);
+		$statement->bindValue(3, $content, PDO::PARAM_STR);
+		$statement->bindValue(4, $date, PDO::PARAM_STR);
+		$statement->execute();
 
-        if ($post->getPostId() === null) {
-            $query = "INSERT INTO posts (title, author, content, date) "
-                . "VALUES ('$title', '$author', '$content', '$date')";
-        }
-
-        $this->db->exec($query);
         return $this->db->lastInsertId();
     }
 }
