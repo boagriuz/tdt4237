@@ -26,7 +26,7 @@ class UserRepository
     {
         $this->pdo = $pdo;
 		$this->UPDATE_QUERY = $this->pdo->prepare("UPDATE users SET email=?, age=?, bio=?, isadmin=?, fullname =?, address=?, postcode=?, isdoctor=?, bankaccount=?, issubscribed=? WHERE id=?");
-		$this->INSERT_QUERY = $this->pdo->prepare("INSERT INTO users(user, pass, email, age, bio, isadmin, fullname, address, postcode, isdoctor, bankaccount, issubscribed) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		$this->INSERT_QUERY = $this->pdo->prepare("INSERT INTO users(user, pass, salt, email, age, bio, isadmin, fullname, address, postcode, isdoctor, bankaccount, issubscribed) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		$this->FIND_BY_NAME = $this->pdo->prepare("SELECT * FROM users WHERE user=?");
 		$this->DELETE_BY_NAME = $this->pdo->prepare("DELETE FROM users WHERE user=?");
 		$this->FIND_FULL_NAME = $this->pdo->prepare("SELECT * FROM users WHERE user=?");
@@ -34,7 +34,7 @@ class UserRepository
 
     public function makeUserFromRow(array $row)
     {
-        $user = new User($row['user'], $row['pass'], $row['fullname'], $row['address'], $row['postcode'], $row['email']);
+        $user = new User($row['user'], $row['pass'], $row['salt'], $row['fullname'], $row['address'], $row['postcode'], $row['email']);
         $user->setUserId($row['id']);
         $user->setFullname($row['fullname']);
         $user->setAddress(($row['address']));
@@ -63,11 +63,6 @@ class UserRepository
 
     public function getNameByUsername($username)
     {
-        #$query = sprintf(self::FIND_FULL_NAME, $username);
-
-        #$result = $this->pdo->query($query, PDO::FETCH_ASSOC);
-        #$row = $result->fetch();
-		
 		$this->FIND_FULL_NAME->bindValue(1, $username, PDO::PARAM_STR);
 		$this->FIND_FULL_NAME->execute();
 		$row = $this->FIND_FULL_NAME->fetch(PDO::FETCH_ASSOC);
@@ -92,9 +87,6 @@ class UserRepository
     {
 		$this->DELETE_BY_NAME->bindValue(1, $username, PDO::PARAM_STR);
 		return $this->DELETE_BY_NAME->execute();
-#        return $this->pdo->exec(
-#            sprintf(self::DELETE_BY_NAME, $username)
-#        );
     }
 
     public function all()
@@ -122,16 +114,17 @@ class UserRepository
     {	
 		$this->INSERT_QUERY->BindValue(1, $user->getUsername(), PDO::PARAM_STR);
 		$this->INSERT_QUERY->BindValue(2, $user->getHash(), PDO::PARAM_STR);
-		$this->INSERT_QUERY->BindValue(3, $user->getEmail(), PDO::PARAM_STR);
-		$this->INSERT_QUERY->BindValue(4, $user->getAge(), PDO::PARAM_STR);
-		$this->INSERT_QUERY->BindValue(5, $user->getBio(), PDO::PARAM_STR);
-		$this->INSERT_QUERY->BindValue(6, $user->getIsAdmin(), PDO::PARAM_INT);
-		$this->INSERT_QUERY->BindValue(7, $user->getFullname(), PDO::PARAM_STR);
-		$this->INSERT_QUERY->BindValue(8, $user->getAddress(), PDO::PARAM_STR);
-		$this->INSERT_QUERY->BindValue(9, $user->getPostcode(), PDO::PARAM_STR);
-		$this->INSERT_QUERY->BindValue(10, $user->getIsDoctor(), PDO::PARAM_INT);
-		$this->INSERT_QUERY->BindValue(11, $user->getBankAccount(), PDO::PARAM_STR);
-		$this->INSERT_QUERY->BindValue(12, $user->getIsSubscribed(), PDO::PARAM_INT);
+		$this->INSERT_QUERY->BindValue(3, $user->getSalt(), PDO::PARAM_STR);
+		$this->INSERT_QUERY->BindValue(4, $user->getEmail(), PDO::PARAM_STR);
+		$this->INSERT_QUERY->BindValue(5, $user->getAge(), PDO::PARAM_STR);
+		$this->INSERT_QUERY->BindValue(6, $user->getBio(), PDO::PARAM_STR);
+		$this->INSERT_QUERY->BindValue(7, $user->getIsAdmin(), PDO::PARAM_INT);
+		$this->INSERT_QUERY->BindValue(8, $user->getFullname(), PDO::PARAM_STR);
+		$this->INSERT_QUERY->BindValue(9, $user->getAddress(), PDO::PARAM_STR);
+		$this->INSERT_QUERY->BindValue(10, $user->getPostcode(), PDO::PARAM_STR);
+		$this->INSERT_QUERY->BindValue(11, $user->getIsDoctor(), PDO::PARAM_INT);
+		$this->INSERT_QUERY->BindValue(12, $user->getBankAccount(), PDO::PARAM_STR);
+		$this->INSERT_QUERY->BindValue(13, $user->getIsSubscribed(), PDO::PARAM_INT);
 
         return $this->INSERT_QUERY->execute();
     }

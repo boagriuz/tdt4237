@@ -18,10 +18,11 @@ class User
 	protected $bankaccount = '0';
 	protected $isSubscribed = 0;
 
-    function __construct($username, $hash, $fullname, $address, $postcode, $email)
+    function __construct($username, $hash, $salt, $fullname, $address, $postcode, $email)
     {
         $this->username = $username;
         $this->hash = $hash;
+		$this->salt = $salt;
         $this->fullname = $fullname;
         $this->address = $address;
         $this->postcode = $postcode;
@@ -46,6 +47,11 @@ class User
     {
         return $this->hash;
     }
+	
+	public function getSalt()
+	{
+		return $this->salt;
+	}
 
     public function getEmail()
     {
