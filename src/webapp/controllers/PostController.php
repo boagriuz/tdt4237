@@ -61,7 +61,7 @@ class PostController extends Controller
 			
             $comments = $this->commentRepository->findByPostId($postId);
             $request = $this->app->request;
-            $message = $request->get('msg');
+            $message = strip_tags($request->get('msg'));
             $variables = [];
     
             if($message) 
@@ -138,7 +138,7 @@ class PostController extends Controller
                 $post->setContent($content);
                 $post->setDate($date);
                 $savedPost = $this->postRepository->save($post);
-                $this->app->redirect('/posts/' . $savedPost . '?msg="Post succesfully posted'); // TODO: GET msg-request is dangerous.
+                $this->app->redirect('/posts/' . $savedPost . '?msg="Post succesfully posted');
             }
         }
 
