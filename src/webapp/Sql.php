@@ -17,11 +17,14 @@ class Sql
      */
     static function up()
     {
+
         $q1 = "CREATE TABLE users (id INTEGER PRIMARY KEY, user VARCHAR(50), pass VARCHAR(150), salt VARCHAR(50), email VARCHAR(50), fullname VARCHAR(50), address VARCHAR(50), postcode VARCHAR (4), age VARCHAR(50), bio VARCHAR(50), isadmin INTEGER, isdoctor INTEGER, bankaccount VARCHAR(11), issubscribed INTEGER, balance INTEGER DEFAULT 0);";
+		$q2 = "CREATE TABLE failed_logins(id INTEGER PRIMARY KEY AUTOINCREMENT, user VARCHAR(50) NOT NULL, attemptedTimestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY(user) REFERENCES users(user));";
         $q6 = "CREATE TABLE posts (postId INTEGER PRIMARY KEY AUTOINCREMENT, author TEXT, title TEXT NOT NULL, content TEXT NOT NULL, date TEXT NOT NULL, FOREIGN KEY(author) REFERENCES users(user));";
         $q7 = "CREATE TABLE comments(commentId INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL, author TEXT NOT NULL, text INTEGER NOT NULL, belongs_to_post INTEGER NOT NULL, FOREIGN KEY(belongs_to_post) REFERENCES posts(postId));";
 
         self::$pdo->exec($q1);
+		self::$pdo->exec($q2);
         self::$pdo->exec($q6);
         self::$pdo->exec($q7);
 
@@ -73,10 +76,12 @@ class Sql
     static function down()
     {
         $q1 = "DROP TABLE users";
+		$q2 = "DROP TABLE failed_logins";
         $q4 = "DROP TABLE posts";
         $q5 = "DROP TABLE comments";
 
         self::$pdo->exec($q1);
+		self::$pdo->exec($q2);
         self::$pdo->exec($q4);
         self::$pdo->exec($q5);
 

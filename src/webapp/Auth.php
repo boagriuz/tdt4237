@@ -5,6 +5,7 @@ namespace tdt4237\webapp;
 use Exception;
 use tdt4237\webapp\Hash;
 use tdt4237\webapp\repository\UserRepository;
+use tdt4237\webapp\repository\FailedLoginAttemptRepository;
 
 class Auth
 {
@@ -18,10 +19,13 @@ class Auth
      * @var UserRepository
      */
     private $userRepository;
+	
+	private $failedLoginAttemptRepository;
 
-    public function __construct(UserRepository $userRepository, Hash $hash)
+    public function __construct(UserRepository $userRepository, FailedLoginAttemptRepository $failedLoginAttemptRepository, Hash $hash)
     {
         $this->userRepository = $userRepository;
+		$this->failedLoginAttemptRepository = $failedLoginAttemptRepository;
         $this->hash           = $hash;
     }
 
@@ -29,11 +33,19 @@ class Auth
     {
         $user = $this->userRepository->findByUser($username);
 
-        if ($user === false) {
+        if ($user === false)
+		{
             return false;
         }
+		
+		$isPasswordCorrect = $this->hash->check($password, $user->getSalt(), $user->getHash());
 
-        return $this->hash->check($password, $user->getSalt(), $user->getHash());
+		if ($isPasswordCorrect === false)
+		{
+			$this->failedLoginAttemptRepository->Save($user->getUsername());
+		}
+		
+        return $isPasswordCorrect;
     }
 
     /**

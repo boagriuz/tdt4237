@@ -3,6 +3,7 @@
 namespace tdt4237\webapp\controllers;
 
 use tdt4237\webapp\repository\UserRepository;
+use tdt4237\webapp\repository\FailedLoginAttemptRepository;
 
 class LoginController extends Controller
 {
@@ -31,11 +32,16 @@ class LoginController extends Controller
         $user    = $request->post('user');
         $pass    = $request->post('pass');
 
+		if ($this->failedLoginAttemptRepository->getFailedAttempts($user) > 4)
+		{
+			$this->app->flashNow('error', 'You have exceeded the allowed login attempts, wait 1 minute before trying again.');
+			$this->render('login.twig', []);
+			return;
+		}
+
         if ($this->auth->checkCredentials($user, $pass)) 
 		{
             $_SESSION['user'] = $user;
-           // setcookie("user", $user, 0, "/", "localhost:8080/", FALSE, TRUE);
-           // setcookie("password",  $pass);
             $isAdmin = $this->auth->user()->isAdmin();
 
             if ($isAdmin) 
