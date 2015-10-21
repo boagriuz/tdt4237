@@ -5,16 +5,16 @@
     <h2>Posts</h2>
 	{% if user.isDoctor %}
 	    {% for post in doctorVisiblePosts %}
-	        <div class="post">
-	            <a href="/posts/{{ post.postId }}">{{ post.title}}</a> by  <a href="/user/{{ post.author|raw }}"> {{ post.author|raw }}</a>. Posted on {{ post.date }}
+	        <div class={% if post.answeredByDoctor %}"doctor" {% else %}"post"{% endif %}>
+	            <a  href="/posts/{{ post.postId }}">{{ post.title}}</a> by  <a href="/user/{{ post.author|raw }}"> {{ post.author|raw }}</a>. Posted on {{ post.date }}.
 	        </div>
 		{% else %}
 			Nothing to do as of yet Dr. {{ user.username }}
 		{% endfor %}
 	{% else %}	
 	    {% for post in posts %}
-	        <div class="post">
-	            <a href="/posts/{{ post.postId }}">{{ post.title}}</a> by  <a href="/user/{{ post.author|raw }}"> {{ post.author|raw }}</a>. Posted on {{ post.date }}
+	        <div class={% if post.answeredByDoctor %}"doctor" {% else %}"post"{% endif %}>
+			<a href="/posts/{{ post.postId }}">{{ post.title}}</a> by  <a href="/user/{{ post.author|raw }}"> {{ post.author|raw }}</a>. Posted on {{ post.date }}.
 	        </div>
 	    {% else %}
 	        There are no posts as of yet
