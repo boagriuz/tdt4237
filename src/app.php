@@ -8,6 +8,7 @@ use tdt4237\webapp\Hash;
 use tdt4237\webapp\repository\UserRepository;
 use tdt4237\webapp\repository\PostRepository;
 use tdt4237\webapp\repository\CommentRepository;
+use tdt4237\webapp\repository\FailedLoginAttemptRepository;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -44,7 +45,8 @@ $app->hash = new Hash();
 $app->userRepository = new UserRepository($app->db);
 $app->postRepository = new PostRepository($app->db);
 $app->commentRepository = new CommentRepository($app->db);
-$app->auth = new Auth($app->userRepository, $app->hash);
+$app->failedLoginAttemptRepository = new FailedLoginAttemptRepository($app->db);
+$app->auth = new Auth($app->userRepository, $app->failedLoginAttemptRepository, $app->hash);
 
 $ns ='tdt4237\\webapp\\controllers\\';
 

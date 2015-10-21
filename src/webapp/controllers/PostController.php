@@ -66,7 +66,7 @@ class PostController extends Controller
     
             if($message) 
 			{
-                $variables['msg'] = $message; // TODO: GET msg-request is dangerous.
+                $variables['msg'] = $message;
             }
     
             $this->render('showpost.twig', [
