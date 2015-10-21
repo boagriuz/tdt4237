@@ -13,6 +13,7 @@ class UserRepository
     const SELECT_ALL = "SELECT * FROM users";
     protected $INSERT_QUERY;
     protected $UPDATE_QUERY;
+	protected $UPDATE_BALANCE;
     protected $FIND_BY_NAME;
     protected $DELETE_BY_NAME;
     protected $FIND_FULL_NAME;
@@ -26,6 +27,7 @@ class UserRepository
     {
         $this->pdo = $pdo;
 		$this->UPDATE_QUERY = $this->pdo->prepare("UPDATE users SET email=?, age=?, bio=?, isadmin=?, fullname =?, address=?, postcode=?, isdoctor=?, bankaccount=?, issubscribed=? WHERE id=?");
+		$this->UPDATE_BALANCE = $this->pdo->prepare("UPDATE users SET balance=? WHERE id=?");
 		$this->INSERT_QUERY = $this->pdo->prepare("INSERT INTO users(user, pass, salt, email, age, bio, isadmin, fullname, address, postcode, isdoctor, bankaccount, issubscribed) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		$this->FIND_BY_NAME = $this->pdo->prepare("SELECT * FROM users WHERE user=?");
 		$this->DELETE_BY_NAME = $this->pdo->prepare("DELETE FROM users WHERE user=?");
@@ -57,6 +59,10 @@ class UserRepository
         if (!empty($row['age'])) {
             $user->setAge(new Age($row['age']));
         }
+
+		if(!empty($row['balance'])){
+			$user->setBalance($row['balance']);
+		}
 
         return $user;
     }
@@ -147,6 +153,14 @@ class UserRepository
 		return $this->UPDATE_QUERY->execute();
     }
 
+	public function saveBalance(User $user)
+	{
+		$this->UPDATE_BALANCE->bindValue(1, $user->getBalance(), PDO::PARAM_INT);
+		$this->UPDATE_BALANCE->bindValue(2, $user->getUserId(), PDO::PARAM_INT);
+
+		return $this->UPDATE_BALANCE->execute();
+	}
+
     public function paidDoctor(User $user)
     {
         $user->setIsDoctor(1);
@@ -158,4 +172,11 @@ class UserRepository
         $user->setIsDoctor(0);
         return $this->saveExistingUser($user);
     }
+	public function addToBalance(User $user, $amount) 
+	{
+		$balance = $user->getBalance();
+		$balance += $amount;
+		$user->setBalance($balance);
+		return $this->saveBalance($user);
+	}
 }

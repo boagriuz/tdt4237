@@ -11,13 +11,14 @@ class Controller
     protected $userRepository;
     protected $auth;
     protected $postRepository;
+	protected $failedLoginAttemptRepository;
 
     public function __construct()
     {
         $this->app = \Slim\Slim::getInstance();
         $this->userRepository = $this->app->userRepository;
         $this->postRepository = $this->app->postRepository;
-        $this->postRepository = $this->app->postRepository;
+        $this->failedLoginAttemptRepository = $this->app->failedLoginAttemptRepository;
         $this->commentRepository = $this->app->commentRepository;
         $this->auth = $this->app->auth;
         $this->hash = $this->app->hash;

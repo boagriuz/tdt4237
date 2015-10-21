@@ -66,7 +66,7 @@ class PostController extends Controller
     
             if($message) 
 			{
-                $variables['msg'] = $message; // TODO: GET msg-request is dangerous.
+                $variables['msg'] = $message;
             }
     
             $this->render('showpost.twig', [
@@ -90,7 +90,23 @@ class PostController extends Controller
             $comment->setText($this->app->request->post("text"));
             $comment->setDate(date("dmY"));
             $comment->setPost($postId);
+
+			$authorUser = $this->userRepository->findByUser($_SESSION['user']);
+			$post = $this->postRepository->find($postId);
+			$answeredByADoctor = $post->getAnsweredByDoctor();	
+
             $this->commentRepository->save($comment);
+				
+			//if author is a doctor and not already answered by a doctor				
+			if($authorUser->isDoctor() && !$answeredByADoctor)
+			{
+			//Add 7$ to the doctor's balance
+				$this->userRepository->addToBalance($authorUser, 7); 
+				var_dump($authorUser);
+			//Subtract 10$ from the user's balance
+				$postAuthor = $this->userRepository->findByUser($post->getAuthor());
+				$this->userRepository->addToBalance($postAuthor, -10); 
+			}
             $this->app->redirect('/posts/' . $postId);
         }
         else 

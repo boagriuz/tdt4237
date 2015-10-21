@@ -19,7 +19,7 @@ class PostRepository
         $this->db = $db;
     }
     
-    public static function create($id, $author, $title, $content, $date)
+    public static function create($id, $author, $title, $content, $date, $answeredByDoctor)
     {
         $post = new Post;
         
@@ -28,12 +28,19 @@ class PostRepository
             ->setAuthor($author)
             ->setTitle($title)
             ->setContent($content)
-            ->setDate($date);
+            ->setDate($date)
+			->setAnsweredByDoctor($answeredByDoctor);
     }
 
     public function find($postId)
     {
-		$statement = $this->db->prepare("SELECT * FROM posts WHERE postId = ?");
+		$statement = $this->db->prepare("SELECT *,
+				CASE WHEN EXISTS (
+					SELECT * from comments JOIN users ON comments.author == users.user WHERE posts.postId == comments.belongs_to_post AND users.isdoctor == 1) 
+					THEN '1'
+					ELSE '0' 
+				END AS answeredByDoctor  
+			FROM posts WHERE postId = ?");
         $statement->bindValue(1, $postId, PDO::PARAM_INT);
 		$statement->execute();
 		$row = $statement->fetch();
@@ -47,7 +54,13 @@ class PostRepository
 	
 	public function doctorVisiblePosts()
 	{
-		$sql = "SELECT * FROM posts JOIN users ON posts.author == users.user WHERE (NOT users.bankaccount == 0) AND users.issubscribed == 1";
+		$sql = "SELECT *,
+			CASE WHEN EXISTS (
+					SELECT * from comments JOIN users ON comments.author == users.user WHERE posts.postId == comments.belongs_to_post AND users.isdoctor == 1) 
+					THEN '1'
+					ELSE '0' 
+				END AS answeredByDoctor 		
+			FROM posts JOIN users ON posts.author == users.user WHERE (NOT users.bankaccount == 0) AND users.issubscribed == 1"; //TODO: Add answered by doctor
         $results = $this->db->query($sql);
 
         if($results === false) {
@@ -67,7 +80,13 @@ class PostRepository
 
     public function all()
     {
-        $sql   = "SELECT * FROM posts";
+        $sql   = "SELECT posts.*,
+			CASE WHEN EXISTS (
+				SELECT * from comments JOIN users ON comments.author == users.user WHERE posts.postId == comments.belongs_to_post AND users.isdoctor == 1) 
+					THEN '1'
+					ELSE '0' 
+				END AS answeredByDoctor 
+			FROM posts";
         $results = $this->db->query($sql);
 
         if($results === false) {
@@ -92,7 +111,8 @@ class PostRepository
             $row['author'],
             $row['title'],
             $row['content'],
-            $row['date']
+            $row['date'],
+			$row['answeredByDoctor']
         );
 
        //  $this->db = $db;

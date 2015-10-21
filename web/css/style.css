@@ -70,3 +70,7 @@ label {
     border: 1px solid gray;
     margin: 10px;
 }
+
+.doctor{
+	background: rgba(0, 255, 0, .5);
+}

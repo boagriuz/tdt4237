@@ -15,6 +15,7 @@ class Post
     protected $title;
     protected $content;
     protected $date;
+    protected $answeredByDoctor;
 
 
     public function getPostId() {
@@ -61,10 +62,12 @@ class Post
     public function getTitle() {
         return $this->title;
     }
-
-
-
-
-
-
+    
+    public function getAnsweredByDoctor(){
+   		return $this->answeredByDoctor;
+    }
+	public function setAnsweredByDoctor($answeredByDoctor) {
+		$this->answeredByDoctor = $answeredByDoctor;
+		return $this;
+	}
 }
