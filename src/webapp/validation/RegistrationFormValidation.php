@@ -4,9 +4,12 @@ namespace tdt4237\webapp\validation;
 
 use tdt4237\webapp\models\User;
 use tdt4237\webapp\models\Email;
+use tdt4237\webapp\repository\UserRepository;
 
 class RegistrationFormValidation
 {
+    
+
     const MIN_USER_LENGTH = 3;
     
     private $validationErrors = [];
@@ -46,6 +49,9 @@ class RegistrationFormValidation
             $this->validationErrors[] = "Post code must be exactly four digits";
         }
 
+        //check if username already exists in db
+        
+
         //set email, validation is done in Email.php
         
         if(empty($email)){
@@ -76,7 +82,7 @@ class RegistrationFormValidation
 
         if(preg_match('((?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,99})', $password) === 0){
 
-            $this->validationErrors[] = 'Invalid password. Minimum 6 characters, digit, uppercase and lowercase letters required';
+            $this->validationErrors[] = 'Invalid password. Minimum 6 characters. Digits, uppercase and lowercase letters required';
         }
     }
 }

@@ -76,7 +76,8 @@ class UserRepository
         $this->FIND_BY_NAME->execute();
 		$row = $this->FIND_BY_NAME->fetch(PDO::FETCH_ASSOC);
         
-        if ($row === false) {
+        if ($row === false) 
+        {
             return false;
         }
 

@@ -29,7 +29,8 @@ class Auth
     {
         $user = $this->userRepository->findByUser($username);
 
-        if ($user === false) {
+        if ($user === false) 
+        {
             return false;
         }
 
@@ -44,9 +45,11 @@ class Auth
         return isset($_SESSION['user']);
     }
 
-    public function getUsername() {
-        if(isset($_SESSION['user'])){
-        return $_SESSION['user'];
+    public function getUsername() 
+    {
+        if(isset($_SESSION['user']))
+        {
+        	return $_SESSION['user'];
         }
     }
 
@@ -69,6 +72,18 @@ class Auth
 
         throw new Exception('Not logged in but called Auth::user() anyway');
     }
+
+    /**
+	* Check if user exists
+    */
+	public function isUserOccupied()
+	{
+		if($this->userRepository->findByUser($_SESSION['user']))
+		{
+			return true;
+		}
+		else return false;
+	}
 
     /**
      * Is currently logged in user admin?

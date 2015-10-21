@@ -8,6 +8,7 @@ use tdt4237\webapp\models\User;
 use tdt4237\webapp\validation\EditUserFormValidation;
 use tdt4237\webapp\validation\RegistrationFormValidation;
 
+
 class UserController extends Controller
 {
 
@@ -38,7 +39,7 @@ class UserController extends Controller
         $username = $request->post('user');
         $password = $request->post('pass_one');
         $retype_pass = $request->post('pass_two');
-
+        $userRepo = $this->
 
         $validation = new RegistrationFormValidation($username, $password, $retype_pass, $fullname, $address, $postcode, $email);
 
