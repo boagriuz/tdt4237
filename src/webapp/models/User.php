@@ -17,6 +17,7 @@ class User
     protected $isDoctor = 0;
 	protected $bankaccount = '0';
 	protected $isSubscribed = 0;
+	protected $balance = 0;
 
     function __construct($username, $hash, $salt, $fullname, $address, $postcode, $email)
     {
@@ -189,6 +190,16 @@ class User
 	public function setIsSubscribed($isSubscribed)
 	{
 		$this->isSubscribed = $isSubscribed;
+		return $this;
+	}
+	public function getBalance()
+	{
+		return $this->balance;
+	}
+	
+	public function setBalance($balance)
+	{
+		$this->balance = $balance;
 		return $this;
 	}
 }
