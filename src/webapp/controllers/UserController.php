@@ -40,7 +40,7 @@ class UserController extends Controller
         $password = $request->post('pass_one');
         $retype_pass = $request->post('pass_two');
         $userRepo = $this->app->userRepository;
-        $validation = new RegistrationFormValidation($username, $password, $retype_pass, $fullname, $address, $postcode, $email);
+        $validation = new RegistrationFormValidation($username, $password, $retype_pass, $fullname, $address, $postcode, $email, $this->app->userRepository);
 
         if ($validation->isGoodToGo()) {
             $password = $password;
