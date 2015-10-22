@@ -14,9 +14,9 @@ class RegistrationFormValidation
     
     private $validationErrors = [];
     
-    public function __construct($username, $password, $retype_pass, $fullname, $address, $postcode, $email)
+    public function __construct($username, $password, $retype_pass, $fullname, $address, $postcode, $email, $userRepository)
     {
-        return $this->validate($username, $password, $retype_pass, $fullname, $address, $postcode, $email);
+        return $this->validate($username, $password, $retype_pass, $fullname, $address, $postcode, $email, $userRepository);
     }
     
     public function isGoodToGo()
@@ -29,9 +29,14 @@ class RegistrationFormValidation
         return $this->validationErrors;
     }
 
-    private function validate($username, $password, $retype_pass, $fullname, $address, $postcode, $email)
+    private function validate($username, $password, $retype_pass, $fullname, $address, $postcode, $email, $userRepository)
     {
-        
+        $usernameTaken = $userRepository->findByUser($username);
+		
+		if($usernameTaken !== false)
+		{
+			$this->validationErrors[] = "Username is already taken";
+		}
 
         if(empty($fullname)) {
             $this->validationErrors[] = "Please write in your full name";
