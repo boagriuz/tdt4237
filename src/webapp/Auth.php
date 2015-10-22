@@ -33,13 +33,8 @@ class Auth
     {
         $user = $this->userRepository->findByUser($username);
 
-<<<<<<< HEAD
-        if ($user === false) 
-        {
-=======
         if ($user === false)
 		{
->>>>>>> 3234472144ec1dac8b587d3dbed521fe91a0e5e3
             return false;
         }
 		

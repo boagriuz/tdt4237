@@ -40,25 +40,29 @@ class Sql
 		$salt1 = Hash::generateSalt();
 		$salt2 = Hash::generateSalt();
 		$salt3 = Hash::generateSalt();
+		$salt4 = Hash::generateSalt();
 		
-        $hash1 = Hash::make(bin2hex(openssl_random_pseudo_bytes(2)), $salt1);
-        $hash2 = Hash::make('bobdylan', $salt2);
-        $hash3 = Hash::make('liverpool', $salt3);
+        $hash1 = Hash::make('TLc^3HfhsXbQiD>b8L', $salt1);
+        $hash2 = Hash::make('i[hC*AQcuzDhV9J7nj', $salt2);
+        $hash3 = Hash::make('Nu3(wfynj6YFK)vhdb', $salt3);
+		$hash4 = Hash::make('Testuser123', $salt4);
 
-        $q1 = "INSERT INTO users(user, pass, salt, isadmin, fullname, address, postcode, isdoctor, bankaccount, issubscribed) VALUES ('admin', '$hash1', '$salt1', 1, 'admin', 'homebase', '9090', 1, '', 0)";
-        $q2 = "INSERT INTO users(user, pass, salt, isadmin, fullname, address, postcode, isdoctor, bankaccount, issubscribed) VALUES ('bob', '$hash2', '$salt2', 1, 'Robert Green', 'Greenland Grove 9', '2010', 1, '11115553333', 1)";
-        $q3 = "INSERT INTO users(user, pass, salt, isadmin, fullname, address, postcode, isdoctor, bankaccount, issubscribed) VALUES ('bjarni', '$hash3', '$salt3', 1, 'Bjarni Torgmund', 'Hummerdale 12', '4120', 1, '', 0)";
+        $q1 = "INSERT INTO users(user, pass, salt, isadmin, fullname, address, postcode, isdoctor, bankaccount, issubscribed) VALUES ('tore', '$hash1', '$salt1', 1, 'Tore Sagen', 'homebase', '9090', 1, '', 0)";
+        $q2 = "INSERT INTO users(user, pass, salt, isadmin, fullname, address, postcode, isdoctor, bankaccount, issubscribed) VALUES ('steinar', '$hash2', '$salt2', 0, 'Steinar Sagen', 'Greenland Grove 9', '2010', 1, '11115553333', 1)";
+        $q3 = "INSERT INTO users(user, pass, salt, isadmin, fullname, address, postcode, isdoctor, bankaccount, issubscribed) VALUES ('bjarte', '$hash3', '$salt3', 0, 'Bjarte Tjøstheim', 'Hummerdale 12', '4120', 1, '', 0)";
+		$q4 = "INSERT INTO users(user, pass, salt, isadmin, fullname, address, postcode, isdoctor, bankaccount, issubscribed) VALUES ('testuser', '$hash4', '$salt4', 1, 'Tore Tang', 'Byen', '8080', 0, '', 0)";
        
         self::$pdo->exec($q1);
         self::$pdo->exec($q2);
         self::$pdo->exec($q3);
+		self::$pdo->exec($q4);
 
         print "[tdt4237] Done inserting dummy users.".PHP_EOL;
     }
 
     static function insertPosts() {
-        $q4 = "INSERT INTO posts(author, date, title, content) VALUES ('bob', '26082015', 'I have a problem', 'I have a generic problem I think its embarrasing to talk about. Someone help?')";
-        $q5 = "INSERT INTO posts(author, date, title, content) VALUES ('bjarni', '26082015', 'I also have a problem', 'I generally fear very much for my health')";
+        $q4 = "INSERT INTO posts(author, date, title, content) VALUES ('steinar', '26082015', 'I have a problem', 'I have a generic problem I think its embarrasing to talk about. Someone help?')";
+        $q5 = "INSERT INTO posts(author, date, title, content) VALUES ('bjarte', '26082015', 'I also have a problem', 'I generally fear very much for my health')";
 
         self::$pdo->exec($q4);
         self::$pdo->exec($q5);
@@ -66,8 +70,8 @@ class Sql
     }
 
     static function insertComments() {
-        $q1 = "INSERT INTO comments(author, date, text, belongs_to_post) VALUES ('bjarni', '26082015', 'Don''t be shy! No reason to be afraid here',0)";
-        $q2 = "INSERT INTO comments(author, date, text, belongs_to_post) VALUES ('bob', '26082015', 'I wouldn''t worry too much, really. Just relax!',1)";
+        $q1 = "INSERT INTO comments(author, date, text, belongs_to_post) VALUES ('bjarte', '26082015', 'Don''t be shy! No reason to be afraid here',1)";
+        $q2 = "INSERT INTO comments(author, date, text, belongs_to_post) VALUES ('steinar', '26082015', 'I wouldn''t worry too much, really. Just relax!',1)";
         self::$pdo->exec($q1);
         self::$pdo->exec($q2);
         print "[tdt4237] Done inserting comments.".PHP_EOL;
