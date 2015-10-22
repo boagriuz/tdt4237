@@ -80,7 +80,7 @@ class RegistrationFormValidation
             $this->validationErrors[] = 'Password cannot be the same as username';
         }
 
-        if(preg_match('((?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,99})', $password) === 0){
+        if(preg_match('((?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,999})', $password) === 0){
 
             $this->validationErrors[] = 'Invalid password. Minimum 6 characters. Digits, uppercase and lowercase letters required';
         }
