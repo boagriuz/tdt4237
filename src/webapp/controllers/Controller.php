@@ -31,6 +31,8 @@ class Controller
             $variables['isAdmin'] = $this->auth->isAdmin();
             $variables['loggedInUsername'] = $_SESSION['user'];
             $variables['isDoctor'] = $this->auth->isDoctor();
+            $variables['isSubscribed'] = $this->auth->user()->isSubscribed();
+	        $variables['balance'] = $this->auth->user()->getBalance();
         }
 
         print $this->app->render($template, $variables);
