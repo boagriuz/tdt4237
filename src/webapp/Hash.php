@@ -12,7 +12,7 @@ class Hash
 	
 	public static function generateSalt()
 	{
-		return openssl_random_pseudo_bytes(64);
+		return bin2hex(openssl_random_pseudo_bytes(64));
 	}
 
     public static function make($plaintext, $salt)
